@@ -1,3 +1,11 @@
+const titles = [
+  'The Man with the Golden Arm',
+  'The Dance of Life',
+  'Popeye the Sailor Meets Sindbad the Sailor',
+  'Sagebrush Trail',
+  'Santa Claus Conquers the Martians',
+];
+
 export const generateFilm = () => ({
   title: "A Little Pony Without The Carpet",
   alternativeTitle: "Laziness Who Sold Themselves",
@@ -14,5 +22,5 @@ export const generateFilm = () => ({
   runtime: 77,
   genre: ["Comedy"],
   description:
-    "Oscar-winning film, a war drama about two young people, from the creators of timeless classic Nu, Pogodi and Alice in Wonderland, with the best fight scenes since Bruce Lee.",
+    "Oscar-winning film, a war drama about two young people, from the creators of timeless classic Nu Pogodi and Alice in Wonderland, with the best fight scenes since Bruce Lee.",
 });
