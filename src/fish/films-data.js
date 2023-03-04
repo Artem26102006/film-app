@@ -22,8 +22,6 @@ const genres = [
   'Comedy',
 ];
 
-const genresList = genres.
-
 const descrips = [
   'In this short, Sindbad the Sailor (presumably Bluto playing a "role") proclaims himself, in song, to be the greatest sailor, adventurer and…',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed vehicula lorem. Quisque eu dignissim sem, vitae sodales dolor. Duis act…',
