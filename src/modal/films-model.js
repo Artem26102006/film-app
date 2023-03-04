@@ -1,7 +1,7 @@
-import { generateFilm } from '../fish/films-data.js';
+import { generateFilms } from '../fish/films-data.js';
 
 export default class FilmsModel {
-    films = Array.from({length: 5}, generateFilm);
+    films = generateFilms();
 
     getFilms = () => this.films;
 }

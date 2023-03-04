@@ -1,7 +1,20 @@
-export const createFilmDetailsInfo = ({title, director, writers, actors, description, totalRating, release, genre}) => 
-    `<div class="film-details__info-wrap">
+export const createFilmDetailsInfo = ({
+  title,
+  director,
+  writers,
+  actors,
+  description,
+  totalRating,
+  release,
+  genre,
+  poster,
+}) => {
+  const genres = genre.map(genre => {
+    return `<span class="film-details__genre">${genre}</span>`;
+  });
+  return `<div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/the-great-flamarion.jpg" alt="">
+          <img class="film-details__poster-img" src="./${poster}" alt="">
 
           <p class="film-details__age">18+</p>
         </div>
@@ -46,9 +59,7 @@ export const createFilmDetailsInfo = ({title, director, writers, actors, descrip
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${genre}</span>
-                <span class="film-details__genre">Film-Noir</span>
-                <span class="film-details__genre">Mystery</span></td>
+                ${genres.join('')}
             </tr>
           </table>
 
@@ -57,3 +68,4 @@ export const createFilmDetailsInfo = ({title, director, writers, actors, descrip
           </p>
         </div>
       </div>`;
+};

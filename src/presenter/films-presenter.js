@@ -1,4 +1,5 @@
 import { render } from '../render.js';
+import { getRandomNum } from '../util.js';
 import FilmsSortView from '../view/films-sort-view.js';
 import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
@@ -15,18 +16,18 @@ export default class ListOfFilmsPresenter {
     init = (container, filmsModel) => {
         this.container = container;
         this.filmsModel = filmsModel;
-        this.containerFilms = [...this.filmsModel.getFilms()];
+        this.mockFilms = [...this.filmsModel.getFilms()];
 
         render(new FilmsSortView(), this.container);
         render(this.films, this.container);
         render(this.filmsList, this.films.getElement());
         render(this.filmsListContainer, this.filmsList.getElement());
 
-        for (let i = 0; i < this.containerFilms.length; i++) {
-            render(new FilmCardView(this.containerFilms[i]), this.filmsListContainer.getElement());
+        for (let i = 0; i < this.mockFilms.length; i++) {
+            render(new FilmCardView(this.mockFilms[i]), this.filmsListContainer.getElement());
         }
 
         render(new FilmButtonMoreView(), this.filmsList.getElement());
-        render(new FilmDetailsView(this.containerFilms[0]), this.container.parentElement);
+        render(new FilmDetailsView(this.mockFilms[getRandomNum(0, this.mockFilms.length)]), this.container.parentElement);
     }
 }
