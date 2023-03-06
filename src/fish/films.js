@@ -15,12 +15,34 @@ const posters = [
 ];
 
 const genres = [
-  'Cartoon',
-  'Western',
-  'Musical',
-  'Drama',
+  'Animation',
+  'Action',
+  'Adventure',
   'Comedy',
+  'Family',
+  'Horror',
+  'Thriller',
 ];
+
+const names = [
+  'Alice',
+  'Ivan',
+  'Sergey',
+  'Dakota',
+  'Nevada',
+  'Fedor'
+];
+
+const surnames = [
+  'Makoveev',
+  'Ivanov',
+  'Romanov',
+  'Lee',
+  'James',
+  'Walker'
+];
+
+const countries = ['USA', 'Russia', 'Germany', 'Finland', 'France', 'Spain', 'Italy', 'China', 'Japan'];
 
 const descrips = [
   'In this short, Sindbad the Sailor (presumably Bluto playing a "role") proclaims himself, in song, to be the greatest sailor, adventurer and…',
@@ -31,19 +53,19 @@ const descrips = [
 
 const generateFilm = () => ({
   title: getRandomItem(titles),
-  alternativeTitle: "Laziness Who Sold Themselves",
-  totalRating: getRandomNum(1, 10),
+  alternativeTitle: getRandomItem(titles),
+  totalRating: getRandomNum(0, 10),
   poster: getRandomItem(posters),
-  ageRating: 0,
-  director: "Tom Ford",
-  writers: ["Takeshi Kitano"],
-  actors: ["Morgan Freeman"],
+  ageRating: getRandomNum(0, 18),
+  director: `${getRandomItem(names)} ${getRandomItem(surnames)}`,
+  writers: Array.from({length: 2}, () => `${getRandomItem(names)} ${getRandomItem(surnames)}`),
+  actors: Array.from({length: 2}, () => `${getRandomItem(names)} ${getRandomItem(surnames)}`),
   release: {
     date: "2019-05-11T00:00:00.000Z",
-    releaseCountry: "Finland",
+    releaseCountry: getRandomItem(countries),
   },
-  runtime: 77,
-  genre: ['Cartoon', 'Comedy'],
+  runtime: getRandomNum(60, 180),
+  genre: [...new Set(Array.from({length: getRandomNum(1, 3)}, () => getRandomItem(genres)))],
   description: getRandomItem(descrips),
 });
 

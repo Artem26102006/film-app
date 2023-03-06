@@ -1,29 +1,41 @@
+import { formatMinutesToTime } from "../util.js";
+
+const generateGenreList = (genres) => {
+  return genres.map(genre => {
+    return `<span class="film-details__genre">${genre}</span>`;
+  }).join('');
+};
+
+const generateGenreTitle = (genres) => {
+  return (genres.length > 1) ? 'Genres' : 'Genre'
+};
+
 export const createFilmDetailsInfo = ({
   title,
+  alternativeTitle,
   director,
   writers,
   actors,
   description,
   totalRating,
+  ageRating,
   release,
   genre,
   poster,
+  runtime,
 }) => {
-  const genres = genre.map(genre => {
-    return `<span class="film-details__genre">${genre}</span>`;
-  });
   return `<div class="film-details__info-wrap">
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="./${poster}" alt="">
 
-          <p class="film-details__age">18+</p>
+          <p class="film-details__age">${ageRating}+</p>
         </div>
 
         <div class="film-details__info">
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">Original: ${title}</p>
+              <p class="film-details__title-original">Original: ${alternativeTitle}</p>
             </div>
 
             <div class="film-details__rating">
@@ -50,16 +62,17 @@ export const createFilmDetailsInfo = ({
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">1h 18m</td>
+              <td class="film-details__cell">${formatMinutesToTime(runtime)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
               <td class="film-details__cell">${release.releaseCountry}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${generateGenreTitle(genre)}</td>
               <td class="film-details__cell">
-                ${genres.join('')}
+                ${generateGenreList(genre)}
+              </td>
             </tr>
           </table>
 

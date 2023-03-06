@@ -28,6 +28,6 @@ export default class ListOfFilmsPresenter {
         }
 
         render(new FilmButtonMoreView(), this.filmsList.getElement());
-        render(new FilmDetailsView(this.mockFilms[getRandomNum(0, this.mockFilms.length)]), this.container.parentElement);
+        render(new FilmDetailsView(this.mockFilms[getRandomNum(0, this.mockFilms.length - 1)]), this.container.parentElement);
     }
 }

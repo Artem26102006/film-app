@@ -1,4 +1,4 @@
-import { generateFilms } from '../fish/films-data.js';
+import { generateFilms } from '../fish/films.js';
 
 export default class FilmsModel {
     films = generateFilms();
