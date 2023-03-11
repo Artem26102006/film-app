@@ -3,5 +3,5 @@ import { generateFilms } from '../fish/films.js';
 export default class FilmsModel {
     films = generateFilms();
 
-    getFilms = () => this.films;
+    get = () => this.films;
 }

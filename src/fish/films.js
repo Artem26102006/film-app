@@ -1,5 +1,15 @@
 import {getRandomItem, getRandomNum} from '../util.js';
 
+const getDate = () => {
+  const date = new Date();
+
+  date.setFullYear(
+    date.getFullYear() - getRandomNum(5, 10)
+  );
+
+  return date.toISOString();
+};
+
 const titles = [
   'Popeye the Sailor Meets Sindbad the Sailor',
   'The Man with the Golden Arm',
@@ -61,7 +71,7 @@ const generateFilm = () => ({
   writers: Array.from({length: 2}, () => `${getRandomItem(names)} ${getRandomItem(surnames)}`),
   actors: Array.from({length: 2}, () => `${getRandomItem(names)} ${getRandomItem(surnames)}`),
   release: {
-    date: "2019-05-11T00:00:00.000Z",
+    date: getDate(),
     releaseCountry: getRandomItem(countries),
   },
   runtime: getRandomNum(60, 180),
@@ -69,6 +79,30 @@ const generateFilm = () => ({
   description: getRandomItem(descrips),
 });
 
-export const generateFilms = () => {
-  return Array.from({length: 5}, generateFilm);
+const generateFilms = () => {
+  const films = Array.from({length: 5}, generateFilm);
+
+  let totalCommentsCount = 0;
+
+  return films.map((film, index) => {
+    const hasComments = getRandomNum(0, 1);
+
+    const filmCommentsCount = (hasComments)
+      ? getRandomNum(1, 5)
+      : 0;
+
+    totalCommentsCount += filmCommentsCount;
+
+    return {
+      id: String(index + 1),
+      comments: (hasComments)
+        ? Array.from({length: filmCommentsCount},
+          (_value, commentIndex) => String(totalCommentsCount - commentIndex)
+        )
+        : [],
+      filmInfo: film,
+    };
+  });
 };
+
+export {generateFilms};

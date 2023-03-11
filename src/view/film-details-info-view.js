@@ -1,4 +1,4 @@
-import { formatMinutesToTime } from "../util.js";
+import { formatMinutesToTime, formatStringToDate } from "../util.js";
 
 const generateGenreList = (genres) => {
   return genres.map(genre => {
@@ -58,7 +58,7 @@ export const createFilmDetailsInfo = ({
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">30 March 1945</td>
+              <td class="film-details__cell">${formatStringToDate(release.date)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

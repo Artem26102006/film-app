@@ -13,10 +13,11 @@ export default class ListOfFilmsPresenter {
     filmsList = new FilmsListView();
     filmsListContainer = new FilmsListContainerView();
 
-    init = (container, filmsModel) => {
+    init = (container, filmsModel, commentsModel) => {
         this.container = container;
         this.filmsModel = filmsModel;
-        this.mockFilms = [...this.filmsModel.getFilms()];
+        this.commentsModel = commentsModel;
+        this.mockFilms = [...this.filmsModel.get()];
 
         render(new FilmsSortView(), this.container);
         render(this.films, this.container);
@@ -27,7 +28,9 @@ export default class ListOfFilmsPresenter {
             render(new FilmCardView(this.mockFilms[i]), this.filmsListContainer.getElement());
         }
 
+        const comments = [...this.commentsModel.get(this.mockFilms[0])];
+
         render(new FilmButtonMoreView(), this.filmsList.getElement());
-        render(new FilmDetailsView(this.mockFilms[getRandomNum(0, this.mockFilms.length - 1)]), this.container.parentElement);
+        render(new FilmDetailsView(this.mockFilms[0], comments), this.container.parentElement);
     }
 }
