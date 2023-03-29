@@ -4,7 +4,7 @@ import { createFilmDetailsControls } from './film-details-controls-view.js';
 import { createFilmDetailsCommentsList } from './film-details-comments-list-view.js';
 import { createFilmDetailsNewComment } from './film-details-new-comment.js';
 
-const createTemplate = ({filmInfo}, comments) =>
+const createFilmDetailsTemplate = ({filmInfo}, comments) =>
 `<section class="film-details">
   <div class="film-details__inner">
     <div class="film-details__top-container">
@@ -32,24 +32,28 @@ const createTemplate = ({filmInfo}, comments) =>
 </section>`;
 
 export default class FilmDetailsView {
+  #element = null;
+  #film = null;
+  #comments = null;
+
   constructor(film, comments) {
-    this.film = film
-    this.comments = comments;
+    this.#film = film;
+    this.#comments = comments;
   }
 
-  getTemplate() {
-    return createTemplate(this.film, this.comments);
+  get template() {
+    return createFilmDetailsTemplate(this.#film, this.#comments);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

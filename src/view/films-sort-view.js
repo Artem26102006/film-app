@@ -1,26 +1,30 @@
-import { createElement } from "../render.js";
+import {createElement} from '../render.js';
 
-const createTemplate = () =>
-  `<ul class="sort">
-  <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-  <li><a href="#" class="sort__button">Sort by date</a></li>
-  <li><a href="#" class="sort__button">Sort by rating</a></li>
-</ul>`;
+const createSortViewTemplate = () =>
+  `
+    <ul class="sort">
+      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
+      <li><a href="#" class="sort__button">Sort by date</a></li>
+      <li><a href="#" class="sort__button">Sort by rating</a></li>
+    </ul>
+  `;
 
-export default class FilmsSortView {
-  getTemplate() {
-    return createTemplate();
+export default class SortView {
+  #element = null;
+
+  get template() {
+    return createSortViewTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
