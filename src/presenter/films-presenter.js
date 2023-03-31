@@ -30,22 +30,38 @@ export default class ListOfFilmsPresenter {
     render(this.#filmsList, this.#films.element);
     render(this.#filmsListContainer, this.#filmsList.element);
 
-    for (let i = 0; i < this.#mockFilms.length; i++) {
-      this.#renderFilm(this.#mockFilms[i])
-    }
+    this.#mockFilms.forEach((item) => {
+        this.#renderFilm(item);
+    });
 
     render(this.#FilmButtonMoreView, this.#filmsList.element);
-
-    // const comments = [...this.#commentsModel.get(this.#mockFilms[0])];
-    // render(new FilmDetailsView(this.#mockFilms[0], comments), this.#container.parentElement);
   };
 
-  #renderFilm = (film) => {
+  #renderFilm = film => {
     const filmComponent = new FilmCardView(film);
+    const filmCard = filmComponent.element;
+
+    filmCard.addEventListener('click', () => {
+        this.#showDetailsFilm(film);
+    });
+
+    render(filmComponent, this.#filmsListContainer.element);
+  };
+
+  #showDetailsFilm = (film) => {
     const comments = [...this.#commentsModel.get(film)];
     const filmDetailsComponent = new FilmDetailsView(film, comments);
-    console.log(filmDetailsComponent)
 
-    render(filmComponent, this.#filmsListContainer.element)
+    document.querySelector('body').classList.add('hide-overflow');
+    document.querySelector('body').append(filmDetailsComponent.element);
+
+    this.#closeDetailsFilm(filmDetailsComponent.element);
+  }
+
+  #closeDetailsFilm = (film) => {
+    document.querySelector('body').classList.remove('hide-overflow');
+    film.querySelector('.film-details__close-btn').addEventListener('click', () => {
+        film.remove();
+    });
   }
 }
