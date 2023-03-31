@@ -1,5 +1,3 @@
-import dayjs from "dayjs";
-
 const getRandomItem = items => {
   const list = [...items];
   const rand = Math.floor(Math.random() * list.length);
