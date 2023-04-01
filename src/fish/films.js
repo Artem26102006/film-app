@@ -80,7 +80,7 @@ const generateFilm = () => ({
 });
 
 const generateFilms = () => {
-  const films = Array.from({length: 5}, generateFilm);
+  const films = Array.from({length: 22}, generateFilm);
 
   let totalCommentsCount = 0;
 
