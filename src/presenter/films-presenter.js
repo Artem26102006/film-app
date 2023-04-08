@@ -34,11 +34,7 @@ export default class ListOfFilmsPresenter {
     render(this.#filmsList, this.#films.element);
     render(this.#filmsListContainer, this.#filmsList.element);
 
-    for (
-      let i = 0;
-      i < Math.min(this.#mockFilms.length, FILM_COUNT_PER_STEP);
-      i++
-    ) {
+    for (let i = 0; i < Math.min(this.#mockFilms.length, FILM_COUNT_PER_STEP); i++) {
       const film = this.#mockFilms[i];
       this.#renderFilm(film);
     }
@@ -46,10 +42,7 @@ export default class ListOfFilmsPresenter {
     if (this.#mockFilms.length > FILM_COUNT_PER_STEP) {
       render(this.#FilmButtonMoreView, this.#filmsList.element);
 
-      this.#FilmButtonMoreView.element.addEventListener(
-        "click",
-        this.#handLoadMoreButtonClick
-      );
+      this.#FilmButtonMoreView.element.addEventListener("click", this.#handLoadMoreButtonClick);
     }
   };
 
