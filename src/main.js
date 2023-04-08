@@ -13,9 +13,10 @@ const main = bodyElement.querySelector(".main");
 const footer = bodyElement.querySelector(".footer");
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel(filmsModel);
-const listOfFilms = new ListOfFilmsPresenter();
+const listOfFilms = new ListOfFilmsPresenter(main, filmsModel, commentsModel);
 
 render(new HeaderProfileView(), header);
 render(new FilmsFiltersView(), main);
 render(new FooterStatisticsView(), footer);
-listOfFilms.init(main, filmsModel, commentsModel);
+
+listOfFilms.init();

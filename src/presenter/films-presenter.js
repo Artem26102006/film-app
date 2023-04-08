@@ -5,6 +5,7 @@ import FilmsListContainerView from "../view/films-list-container-view.js";
 import FilmCardView from "../view/film-card-view.js";
 import FilmButtonMoreView from "../view/film-button-more-view.js";
 import FilmDetailsView from "../view/film-details-view.js";
+import NoFilmView from '../view/no-film-view.js';
 import { render } from "../render.js";
 
 const FILM_COUNT_PER_STEP = 5;
@@ -14,7 +15,8 @@ export default class ListOfFilmsPresenter {
   #filmsList = new FilmsListView();
   #filmsListContainer = new FilmsListContainerView();
   #sortComponent = new FilmsSortView();
-  #FilmButtonMoreView = new FilmButtonMoreView();
+  #filmButtonMoreComponent = new FilmButtonMoreView();
+  #noFilmComponent = new NoFilmView();
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filmDetailsComponent = null;
   #container = null;
@@ -22,29 +24,39 @@ export default class ListOfFilmsPresenter {
   #commentsModel = null;
   #mockFilms = [];
 
-  init = (container, filmsModel, commentsModel) => {
+  constructor(container, filmsModel, commentsModel) {
     this.#container = container;
     this.#filmsModel = filmsModel;
     this.#commentsModel = commentsModel;
+  }
 
+  init = () => {
     this.#mockFilms = [...this.#filmsModel.films];
 
+    this.#renderFilms();
+  };
+
+  #renderFilms = () => {
     render(this.#sortComponent, this.#container);
     render(this.#films, this.#container);
     render(this.#filmsList, this.#films.element);
     render(this.#filmsListContainer, this.#filmsList.element);
 
-    for (let i = 0; i < Math.min(this.#mockFilms.length, FILM_COUNT_PER_STEP); i++) {
-      const film = this.#mockFilms[i];
-      this.#renderFilm(film);
+    if (this.#mockFilms.length === 0) {
+      render(this.#noFilmComponent, this.#filmsListContainer.element);
+    } else {
+      for (let i = 0; i < Math.min(this.#mockFilms.length, FILM_COUNT_PER_STEP); i++) {
+        const film = this.#mockFilms[i];
+        this.#renderFilm(film);
+      }
+  
+      if (this.#mockFilms.length > FILM_COUNT_PER_STEP) {
+        render(this.#filmButtonMoreComponent, this.#filmsList.element);
+  
+        this.#filmButtonMoreComponent.element.addEventListener("click", this.#handLoadMoreButtonClick);
+      }
     }
-
-    if (this.#mockFilms.length > FILM_COUNT_PER_STEP) {
-      render(this.#FilmButtonMoreView, this.#filmsList.element);
-
-      this.#FilmButtonMoreView.element.addEventListener("click", this.#handLoadMoreButtonClick);
-    }
-  };
+  }
 
   #handLoadMoreButtonClick = evt => {
     evt.preventDefault();
@@ -58,8 +70,8 @@ export default class ListOfFilmsPresenter {
     this.#renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (this.#renderedFilmCount >= this.#mockFilms.length) {
-      this.#FilmButtonMoreView.element.remove();
-      this.#FilmButtonMoreView.removeElement();
+      this.#filmButtonMoreComponent.element.remove();
+      this.#filmButtonMoreComponent.removeElement();
     }
   };
 
