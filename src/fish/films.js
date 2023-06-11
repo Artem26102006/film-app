@@ -1,97 +1,66 @@
-import {getRandomItem, getRandomNum} from '../util.js';
+import {getRandomInteger, getRandomValue} from '../utils/common.js';
+import {FILM_COUNT} from '../const.js';
+import {
+  NAME_COUNT, MAX_COMMENTS_ON_FILM, GenreCount, Rating,
+  AgeRating, Runtime, YearsDuration, DaysDuration, DateType,
+  names, surnames, titles, posters, genres, description, countries,
+} from './const.js';
 
-const getDate = () => {
+
+const getDate = (type) => {
   const date = new Date();
 
-  date.setFullYear(
-    date.getFullYear() - getRandomNum(5, 10)
-  );
+  switch (type) {
+    case DateType.FILM_INFO:
+      date.setFullYear(
+        date.getFullYear() - getRandomInteger(YearsDuration.MIN, YearsDuration.MAX)
+      );
+      break;
+    case DateType.USER_DETAILS:
+      date.setDate(
+        date.getDate() - getRandomInteger(DaysDuration.MIN, DaysDuration.MAX)
+      );
+      break;
+  }
 
   return date.toISOString();
 };
 
-const titles = [
-  'Popeye the Sailor Meets Sindbad the Sailor',
-  'The Man with the Golden Arm',
-  'Sagebrush Trail',
-  'The Dance of Life',
-];
-
-const posters = [
-  'images/posters/popeye-meets-sinbad.png',
-  'images/posters/the-man-with-the-golden-arm.jpg',
-  'images/posters/sagebrush-trail.jpg',
-  'images/posters/the-dance-of-life.jpg',
-];
-
-const genres = [
-  'Animation',
-  'Action',
-  'Adventure',
-  'Comedy',
-  'Family',
-  'Horror',
-  'Thriller',
-];
-
-const names = [
-  'Alice',
-  'Ivan',
-  'Sergey',
-  'Dakota',
-  'Nevada',
-  'Fedor'
-];
-
-const surnames = [
-  'Makoveev',
-  'Ivanov',
-  'Romanov',
-  'Lee',
-  'James',
-  'Walker'
-];
-
-const countries = ['USA', 'Russia', 'Germany', 'Finland', 'France', 'Spain', 'Italy', 'China', 'Japan'];
-
-const descrips = [
-  'In this short, Sindbad the Sailor (presumably Bluto playing a "role") proclaims himself, in song, to be the greatest sailor, adventurer and…',
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sed vehicula lorem. Quisque eu dignissim sem, vitae sodales dolor. Duis act…',
-  'Cumsan turpis nec elit congue, sit amet aliquet felis dapibus. Mauris auctor ornare tellus. Donec maximus quis nunc in sollicitudin. Quisqu…',
-  'Curabitur lacinia, lacus a egestas auctor, massa enim commodo elit, neque mauris a nunc. Donec ipsum felis, ve facilisis tortor commodo etc…',
-]
-
 const generateFilm = () => ({
-  title: getRandomItem(titles),
-  alternativeTitle: getRandomItem(titles),
-  totalRating: getRandomNum(0, 10),
-  poster: getRandomItem(posters),
-  ageRating: getRandomNum(0, 18),
-  director: `${getRandomItem(names)} ${getRandomItem(surnames)}`,
-  writers: Array.from({length: 2}, () => `${getRandomItem(names)} ${getRandomItem(surnames)}`),
-  actors: Array.from({length: 2}, () => `${getRandomItem(names)} ${getRandomItem(surnames)}`),
+  title: getRandomValue(titles),
+  alternativeTitle: getRandomValue(titles),
+  totalRating: getRandomInteger(Rating.MIN, Rating.MAX),
+  poster: getRandomValue(posters),
+  ageRating: getRandomInteger(AgeRating.MIN, AgeRating.MAX),
+  director: `${getRandomValue(names)} ${getRandomValue(surnames)}`,
+  writers: Array.from({length: NAME_COUNT}, () => `${getRandomValue(names)} ${getRandomValue(surnames)}`),
+  actors: Array.from({length: NAME_COUNT}, () => `${getRandomValue(names)} ${getRandomValue(surnames)}`),
   release: {
-    date: getDate(),
-    releaseCountry: getRandomItem(countries),
+    date: getDate(DateType.FILM_INFO),
+    releaseСountry: getRandomValue(countries)
   },
-  runtime: getRandomNum(60, 180),
-  genre: [...new Set(Array.from({length: getRandomNum(1, 3)}, () => getRandomItem(genres)))],
-  description: getRandomItem(descrips),
+  runtime: getRandomInteger(Runtime.MIN, Runtime.MAX),
+  genre:  Array.from({length: getRandomInteger(GenreCount.MIN, GenreCount.MAX)}, () => getRandomValue(genres)),
+  description
 });
 
 const generateFilms = () => {
-  const films = Array.from({length: 13}, generateFilm);
+  const films = Array.from({length: FILM_COUNT}, generateFilm);
 
   let totalCommentsCount = 0;
 
+  const getWatchingDate = () => getDate(DateType.USER_DETAILS);
+
   return films.map((film, index) => {
-    const hasComments = getRandomNum(0, 1);
+    const hasComments = getRandomInteger(0, 1);
 
     const filmCommentsCount = (hasComments)
-      ? getRandomNum(1, 5)
+      ? getRandomInteger(1, MAX_COMMENTS_ON_FILM)
       : 0;
 
     totalCommentsCount += filmCommentsCount;
+
+    const alreadyWatched = Boolean(getRandomInteger(0, 1));
 
     return {
       id: String(index + 1),
@@ -101,6 +70,12 @@ const generateFilms = () => {
         )
         : [],
       filmInfo: film,
+      userDetails: {
+        watchlist: Boolean(getRandomInteger(0, 1)),
+        alreadyWatched,
+        watchingDate: (alreadyWatched) ? getWatchingDate() : null,
+        favorite: Boolean(getRandomInteger(0, 1))
+      }
     };
   });
 };

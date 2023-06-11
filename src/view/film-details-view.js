@@ -1,5 +1,4 @@
 import AbstractView from "../framework/view/abstract-view.js";
-import { createElement } from "../render.js";
 import { createFilmDetailsInfo } from "./film-details-info-view.js";
 import { createFilmDetailsControls } from "./film-details-controls-view.js";
 import { createFilmDetailsCommentsList } from "./film-details-comments-list-view.js";
