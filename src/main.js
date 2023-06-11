@@ -1,4 +1,4 @@
-import { render } from "./render.js";
+import { render } from "./framework/render.js";
 import HeaderProfileView from "./view/header-profile-view.js";
 import FilmsFiltersView from "./view/films-filters-view.js";
 import FooterStatisticsView from "./view/footer-statistics-view.js";

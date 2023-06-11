@@ -1,3 +1,4 @@
+import { render } from "../framework/render.js";
 import FilmsSortView from "../view/films-sort-view.js";
 import FilmsView from "../view/films-view.js";
 import FilmsListView from "../view/films-list-view.js";
@@ -6,7 +7,6 @@ import FilmCardView from "../view/film-card-view.js";
 import FilmButtonMoreView from "../view/film-button-more-view.js";
 import FilmDetailsView from "../view/film-details-view.js";
 import NoFilmView from "../view/no-film-view.js";
-import { render } from "../render.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -32,7 +32,6 @@ export default class ListOfFilmsPresenter {
 
   init = () => {
     this.#mockFilms = [...this.#filmsModel.films];
-
     this.#renderFilms();
   };
 
@@ -57,16 +56,14 @@ export default class ListOfFilmsPresenter {
       if (this.#mockFilms.length > FILM_COUNT_PER_STEP) {
         render(this.#filmButtonMoreComponent, this.#filmsList.element);
 
-        this.#filmButtonMoreComponent.element.addEventListener(
-          "click",
+        this.#filmButtonMoreComponent.setButtonClickHandler(
           this.#handLoadMoreButtonClick
         );
       }
     }
   };
 
-  #handLoadMoreButtonClick = evt => {
-    evt.preventDefault();
+  #handLoadMoreButtonClick = () => {
     this.#mockFilms
       .slice(
         this.#renderedFilmCount,
@@ -84,12 +81,8 @@ export default class ListOfFilmsPresenter {
 
   #renderFilm = film => {
     const filmComponent = new FilmCardView(film);
-    const filmCard = filmComponent.element;
 
-    filmCard.addEventListener("click", () => {
-      this.#renderDetailsFilm(film);
-      document.addEventListener("keydown", this.#onEscKeyDown);
-    });
+    filmComponent.setFilmClickHandler(this.#renderDetailsFilm, film);
 
     render(filmComponent, this.#filmsListContainer.element);
   };
@@ -97,14 +90,13 @@ export default class ListOfFilmsPresenter {
   #renderDetailsFilm = film => {
     const comments = [...this.#commentsModel.get(film)];
     this.#filmDetailsComponent = new FilmDetailsView(film, comments);
-    const closeButtonFilmDetailsElement = this.#filmDetailsComponent.element.querySelector(".film-details__close-btn");
 
     document.body.classList.add("hide-overflow");
+    document.addEventListener("keydown", this.#onEscKeyDown);
 
-    closeButtonFilmDetailsElement.addEventListener("click", () => {
-      this.#removeFilmDetailsComponent();
-      document.removeEventListener("keydown", this.#onEscKeyDown);
-    });
+    this.#filmDetailsComponent.setFilmDetailsClickHandler(
+      this.#removeFilmDetailsComponent
+    );
 
     render(this.#filmDetailsComponent, this.#container.parentElement);
   };
@@ -113,6 +105,7 @@ export default class ListOfFilmsPresenter {
     this.#filmDetailsComponent.element.remove();
     this.#filmDetailsComponent = null;
     document.body.classList.remove("hide-overflow");
+    document.removeEventListener("keydown", this.#onEscKeyDown);
   };
 
   #onEscKeyDown = evt => {

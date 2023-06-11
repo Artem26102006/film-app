@@ -1,13 +1,15 @@
 import { formatMinutesToTime, formatStringToDate } from "../util.js";
 
-const generateGenreList = (genres) => {
-  return genres.map(genre => {
-    return `<span class="film-details__genre">${genre}</span>`;
-  }).join('');
+const generateGenreList = genres => {
+  return genres
+    .map(genre => {
+      return `<span class="film-details__genre">${genre}</span>`;
+    })
+    .join("");
 };
 
-const generateGenreTitle = (genres) => {
-  return (genres.length > 1) ? 'Genres' : 'Genre'
+const generateGenreTitle = genres => {
+  return genres.length > 1 ? "Genres" : "Genre";
 };
 
 export const createFilmDetailsInfo = ({
@@ -58,11 +60,15 @@ export const createFilmDetailsInfo = ({
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${formatStringToDate(release.date)}</td>
+              <td class="film-details__cell">${formatStringToDate(
+                release.date
+              )}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${formatMinutesToTime(runtime)}</td>
+              <td class="film-details__cell">${formatMinutesToTime(
+                runtime
+              )}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

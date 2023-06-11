@@ -1,4 +1,5 @@
 import { formatStringToYear, formatMinutesToTime } from "../util.js";
+
 export const createFilmCardInfo = ({ comments, filmInfo }) => {
   const { title, totalRating, poster, description, genre, release, runtime } =
     filmInfo;
