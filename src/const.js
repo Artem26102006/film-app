@@ -1,4 +1,4 @@
-const FILM_COUNT = 35;
+const FILM_COUNT = 20;
 
 const FILM_COUNT_PER_STEP = 5;
 

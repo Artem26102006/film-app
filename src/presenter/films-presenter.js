@@ -6,6 +6,7 @@ import FilmsListContainerView from "../view/films-list-container-view.js";
 import FilmButtonMoreView from "../view/film-button-more-view.js";
 import NoFilmView from "../view/no-film-view.js";
 import FilmDetailsPresenter from "./film-details-presenter.js";
+import FilmPresenter from "./film-presenter.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -17,6 +18,7 @@ export default class ListOfFilmsPresenter {
   #filmButtonMoreComponent = new FilmButtonMoreView();
   #noFilmComponent = new NoFilmView();
   #renderedFilmCount = FILM_COUNT_PER_STEP;
+  #filmDetailsPresenter = null;
   #container = null;
   #filmsModel = null;
   #commentsModel = null;
@@ -97,7 +99,26 @@ export default class ListOfFilmsPresenter {
   };
 
   #renderFilm = film => {
-    const filmComponent = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#filmsListContainer.element);
-    filmComponent.init(film);
+    const filmComponent = new FilmPresenter(this.#filmsListContainer.element, this.#renderDetailsFilm);
+    filmComponent.init(film)
+  }
+
+  #renderDetailsFilm = film => {
+    this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown);
+    this.#filmDetailsPresenter.init(film);
+  };
+
+  #removeFilmDetailsComponent = () => {
+    this.#filmDetailsPresenter.destroy();
+    document.body.classList.remove("hide-overflow");
+    document.removeEventListener("keydown", this.#onEscKeyDown);
+  };
+
+  #onEscKeyDown = evt => {
+    if (evt.key === "Escape" || evt.key === "Esc") {
+      evt.preventDefault();
+      this.#removeFilmDetailsComponent();
+      document.removeEventListener("keydown", this.#onEscKeyDown);
+    }
   };
 }
