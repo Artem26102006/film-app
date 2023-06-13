@@ -3,10 +3,9 @@ import FilmsSortView from "../view/films-sort-view.js";
 import FilmsView from "../view/films-view.js";
 import FilmsListView from "../view/films-list-view.js";
 import FilmsListContainerView from "../view/films-list-container-view.js";
-import FilmCardView from "../view/film-card-view.js";
 import FilmButtonMoreView from "../view/film-button-more-view.js";
-import FilmDetailsView from "../view/film-details-view.js";
 import NoFilmView from "../view/no-film-view.js";
+import FilmDetailsPresenter from "./film-details-presenter.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -18,7 +17,6 @@ export default class ListOfFilmsPresenter {
   #filmButtonMoreComponent = new FilmButtonMoreView();
   #noFilmComponent = new NoFilmView();
   #renderedFilmCount = FILM_COUNT_PER_STEP;
-  #filmDetailsComponent = null;
   #container = null;
   #filmsModel = null;
   #commentsModel = null;
@@ -35,14 +33,40 @@ export default class ListOfFilmsPresenter {
     this.#renderFilms();
   };
 
-  #renderFilms = () => {
+  #renderSortFilms = () => {
     render(this.#sortComponent, this.#container);
+  };
+
+  #renderFilmsSection = () => {
     render(this.#films, this.#container);
+  };
+
+  #renderFilmsList = () => {
     render(this.#filmsList, this.#films.element);
+  };
+
+  #renderFilmsContainer = () => {
     render(this.#filmsListContainer, this.#filmsList.element);
+  };
+
+  #renderFilmButtonMore = () => {
+    render(this.#filmButtonMoreComponent, this.#filmsList.element);
+
+    this.#filmButtonMoreComponent.setButtonClickHandler(this.#handLoadMoreButtonClick);
+  };
+
+  #renderNoFilms = () => {
+    render(this.#noFilmComponent, this.#filmsListContainer.element);
+  }
+
+  #renderFilms = () => {
+    this.#renderSortFilms();
+    this.#renderFilmsSection();
+    this.#renderFilmsList();
+    this.#renderFilmsContainer();
 
     if (this.#mockFilms.length === 0) {
-      render(this.#noFilmComponent, this.#filmsListContainer.element);
+      this.#renderNoFilms();
     } else {
       for (
         let i = 0;
@@ -54,21 +78,14 @@ export default class ListOfFilmsPresenter {
       }
 
       if (this.#mockFilms.length > FILM_COUNT_PER_STEP) {
-        render(this.#filmButtonMoreComponent, this.#filmsList.element);
-
-        this.#filmButtonMoreComponent.setButtonClickHandler(
-          this.#handLoadMoreButtonClick
-        );
+        this.#renderFilmButtonMore();
       }
     }
   };
 
   #handLoadMoreButtonClick = () => {
     this.#mockFilms
-      .slice(
-        this.#renderedFilmCount,
-        this.#renderedFilmCount + FILM_COUNT_PER_STEP
-      )
+      .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
       .forEach(film => this.#renderFilm(film));
 
     this.#renderedFilmCount += FILM_COUNT_PER_STEP;
@@ -80,39 +97,7 @@ export default class ListOfFilmsPresenter {
   };
 
   #renderFilm = film => {
-    const filmComponent = new FilmCardView(film);
-
-    filmComponent.setFilmClickHandler(this.#renderDetailsFilm, film);
-
-    render(filmComponent, this.#filmsListContainer.element);
-  };
-
-  #renderDetailsFilm = film => {
-    const comments = [...this.#commentsModel.get(film)];
-    this.#filmDetailsComponent = new FilmDetailsView(film, comments);
-
-    document.body.classList.add("hide-overflow");
-    document.addEventListener("keydown", this.#onEscKeyDown);
-
-    this.#filmDetailsComponent.setFilmDetailsClickHandler(
-      this.#removeFilmDetailsComponent
-    );
-
-    render(this.#filmDetailsComponent, this.#container.parentElement);
-  };
-
-  #removeFilmDetailsComponent = () => {
-    this.#filmDetailsComponent.element.remove();
-    this.#filmDetailsComponent = null;
-    document.body.classList.remove("hide-overflow");
-    document.removeEventListener("keydown", this.#onEscKeyDown);
-  };
-
-  #onEscKeyDown = evt => {
-    if (evt.key === "Escape" || evt.key === "Esc") {
-      evt.preventDefault();
-      this.#removeFilmDetailsComponent();
-      document.removeEventListener("keydown", this.#onEscKeyDown);
-    }
+    const filmComponent = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#filmsListContainer.element);
+    filmComponent.init(film);
   };
 }

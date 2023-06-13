@@ -16,6 +16,7 @@ const main = bodyElement.querySelector(".main");
 const footer = bodyElement.querySelector(".footer");
 const filmsModel = new FilmsModel();
 const commentsModel = new CommentsModel(filmsModel);
+
 const listOfFilms = new ListOfFilmsPresenter(main, filmsModel, commentsModel);
 
 const userStatus = getUserStatus(filmsModel.films);
