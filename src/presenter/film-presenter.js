@@ -1,21 +1,58 @@
 import FilmCardView from "../view/film-card-view.js"
-import { remove, render } from '../framework/render.js'
+import { render } from '../framework/render.js'
 
 export default class FilmPresenter {
   #film = null;
+  #filmComponent = null;
   #filmsListContainer = null;
   #setBtnClickHandler = null;
+  #changeData = null;
 
-  constructor(listContainer, setBtnClickHandler) {
+  constructor(listContainer, setBtnClickHandler, handFilmChange) {
     this.#filmsListContainer = listContainer;
     this.#setBtnClickHandler = setBtnClickHandler;
+    this.#changeData = handFilmChange;
   }
 
   init = film => {
     this.#film = film;
-    const filmComponent = new FilmCardView(this.#film);
+    this.#filmComponent = new FilmCardView(film);
 
-    filmComponent.setFilmClickHandler(this.#setBtnClickHandler, film);
-    render(filmComponent, this.#filmsListContainer);
+    this.#filmComponent.setFilmClickHandler(this.#setBtnClickHandler, film);
+    render(this.#filmComponent, this.#filmsListContainer);
   }
+
+  destroy = () => {
+    remove(this.#filmComponent);
+  };
+
+  #watchlistBtnClickHandler = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        watchlist: !this.#film.userDetails.watchlist
+      },
+    });
+  };
+
+  #watchedBtnClickHandler = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        alreadyWatched: !this.#film.userDetails.alreadyWatched
+      }
+    });
+  };
+
+  #favoriteBtnClickHandler = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        favorite: !this.#film.userDetails.favorite
+      }
+    });
+  };
 }

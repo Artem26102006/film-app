@@ -1,4 +1,4 @@
-import { render } from "../framework/render.js";
+import { remove, render } from "../framework/render.js";
 import FilmsSortView from "../view/films-sort-view.js";
 import FilmsView from "../view/films-view.js";
 import FilmsListView from "../view/films-list-view.js";
@@ -7,6 +7,7 @@ import FilmButtonMoreView from "../view/film-button-more-view.js";
 import NoFilmView from "../view/no-film-view.js";
 import FilmDetailsPresenter from "./film-details-presenter.js";
 import FilmPresenter from "./film-presenter.js";
+import { updateItem } from "../utils/common.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -19,6 +20,7 @@ export default class ListOfFilmsPresenter {
   #noFilmComponent = new NoFilmView();
   #renderedFilmCount = FILM_COUNT_PER_STEP;
   #filmDetailsPresenter = null;
+  #filmPresenter = new Map();
   #container = null;
   #filmsModel = null;
   #commentsModel = null;
@@ -98,9 +100,15 @@ export default class ListOfFilmsPresenter {
     }
   };
 
+  #handFilmChange = (updatedFilm) => {
+    this.#mockFilms = updateItem(this.#mockFilms, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  };
+  
   #renderFilm = film => {
-    const filmComponent = new FilmPresenter(this.#filmsListContainer.element, this.#renderDetailsFilm);
-    filmComponent.init(film)
+    const filmComponent = new FilmPresenter(this.#filmsListContainer.element, this.#renderDetailsFilm, this.#handFilmChange);
+    filmComponent.init(film);
+    this.#filmPresenter.set(film.id, filmComponent);
   }
 
   #renderDetailsFilm = film => {
@@ -120,5 +128,12 @@ export default class ListOfFilmsPresenter {
       this.#removeFilmDetailsComponent();
       document.removeEventListener("keydown", this.#onEscKeyDown);
     }
+  };
+
+  #clearFilmList = () => {
+    this.#filmPresenter.forEach(presenter => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmCount = FILM_COUNT_PER_STEP;
+    remove(this.#filmButtonMoreComponent);
   };
 }
