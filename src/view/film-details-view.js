@@ -4,7 +4,7 @@ import { createFilmDetailsControls } from "./film-details-controls-view.js";
 import { createFilmDetailsCommentsList } from "./film-details-comments-list-view.js";
 import { createFilmDetailsNewComment } from "./film-details-new-comment.js";
 
-const createFilmDetailsTemplate = ({ filmInfo }, comments) =>
+const createFilmDetailsTemplate = ({ filmInfo, userDetails }, comments) =>
   `<section class="film-details">
   <div class="film-details__inner">
     <div class="film-details__top-container">
@@ -14,7 +14,7 @@ const createFilmDetailsTemplate = ({ filmInfo }, comments) =>
 
       ${createFilmDetailsInfo(filmInfo)}  
 
-      ${createFilmDetailsControls()}
+      ${createFilmDetailsControls(userDetails)}
 
     </div>
 
@@ -52,6 +52,36 @@ export default class FilmDetailsView extends AbstractView {
     this.element
       .querySelector(".film-details__close-btn")
       .addEventListener("click", this.#clickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#clickWatchlistHandler)
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#clickWatchedHandler)
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#clickFavoriteHandler)
+  }
+
+  #clickFavoriteHandler = evt => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+  
+  #clickWatchedHandler = evt => {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+  
+  #clickWatchlistHandler = evt => {
+    evt.preventDefault();
+    this._callback.watchlistClick();
   }
 
   #clickHandler = evt => {

@@ -12,15 +12,18 @@ import { updateItem } from "../utils/common.js";
 const FILM_COUNT_PER_STEP = 5;
 
 export default class ListOfFilmsPresenter {
+  #renderedFilmCount = FILM_COUNT_PER_STEP;
+  
   #films = new FilmsView();
   #filmsList = new FilmsListView();
   #filmsListContainer = new FilmsListContainerView();
   #sortComponent = new FilmsSortView();
   #filmButtonMoreComponent = new FilmButtonMoreView();
   #noFilmComponent = new NoFilmView();
-  #renderedFilmCount = FILM_COUNT_PER_STEP;
-  #filmDetailsPresenter = null;
+
   #filmPresenter = new Map();
+
+  #filmDetailsPresenter = null;
   #container = null;
   #filmsModel = null;
   #commentsModel = null;
@@ -103,6 +106,8 @@ export default class ListOfFilmsPresenter {
   #handFilmChange = (updatedFilm) => {
     this.#mockFilms = updateItem(this.#mockFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+    this.#filmDetailsPresenter.destroy();
+    this.#renderDetailsFilm(updatedFilm);
   };
   
   #renderFilm = film => {
@@ -112,7 +117,7 @@ export default class ListOfFilmsPresenter {
   }
   
   #renderDetailsFilm = film => {
-    this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown);
+    this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown, this.#handFilmChange);
     this.#filmDetailsPresenter.init(film);
   };
 

@@ -1,9 +1,9 @@
 import FilmCardView from "../view/film-card-view.js";
-import { render } from "../framework/render.js";
+import { render, replace, remove } from "../framework/render.js";
 
 export default class FilmPresenter {
   #film = null;
-  #filmComponent = null;
+  #filmCardComponent = null;
   #filmsListContainer = null;
   #setBtnClickHandler = null;
   #changeData = null;
@@ -16,19 +16,29 @@ export default class FilmPresenter {
 
   init = film => {
     this.#film = film;
-    this.#filmComponent = new FilmCardView(film);
 
-    this.#filmComponent.setFilmClickHandler(this.#setBtnClickHandler, film);
+    const prevFilmCardComponent = this.#filmCardComponent;
+
+    this.#filmCardComponent = new FilmCardView(this.#film);
+
+    this.#filmCardComponent.setFilmClickHandler(this.#setBtnClickHandler, this.#film);
     
-    this.#filmComponent.setWatchlistClickHandler(this.#watchlistBtnClickHandler);
-    this.#filmComponent.setWatchedClickHandler(this.#watchedBtnClickHandler);
-    this.#filmComponent.setFavoriteClickHandler(this.#favoriteBtnClickHandler);
+    this.#filmCardComponent.setWatchlistClickHandler(this.#watchlistBtnClickHandler);
+    this.#filmCardComponent.setWatchedClickHandler(this.#watchedBtnClickHandler);
+    this.#filmCardComponent.setFavoriteClickHandler(this.#favoriteBtnClickHandler);
 
-    render(this.#filmComponent, this.#filmsListContainer);
+    if (prevFilmCardComponent === null) {
+      render(this.#filmCardComponent, this.#filmsListContainer);
+      return;
+    }
+
+    replace(this.#filmCardComponent, prevFilmCardComponent);
+
+    remove(prevFilmCardComponent);
   };
 
   destroy = () => {
-    remove(this.#filmComponent);
+    remove(this.#filmCardComponent);
   };
 
   #watchlistBtnClickHandler = () => {

@@ -9,12 +9,14 @@ export default class FilmDetailsPresenter {
   #escClose = null;
   #film = null;
   #comments = null
+  #changeData = null
 
-  constructor(container, filmComments, closeBtnFilmDetails, escCLose) {
+  constructor(container, filmComments, closeBtnFilmDetails, escCLose, handFilmChange) {
     this.#container = container;
     this.#filmComments = filmComments;
     this.#closeBtnFilmDetails = closeBtnFilmDetails;
     this.#escClose = escCLose;
+    this.#changeData = handFilmChange;
   }
 
   init = (film) => {
@@ -30,6 +32,10 @@ export default class FilmDetailsPresenter {
 
     this.#filmDetailsComponent.setFilmDetailsClickHandler(this.#closeBtnFilmDetails);
 
+    this.#filmDetailsComponent.setWatchlistClickHandler(this.#watchlistBtnClickHandler);
+    this.#filmDetailsComponent.setWatchedClickHandler(this.#watchedBtnClickHandler);
+    this.#filmDetailsComponent.setFavoriteClickHandler(this.#favoriteBtnClickHandler);
+
     if (prevFilmDetailsComponent === null) {
       render(this.#filmDetailsComponent, this.#container.parentElement);
       return;
@@ -42,5 +48,35 @@ export default class FilmDetailsPresenter {
 
   destroy = () => {
     remove(this.#filmDetailsComponent);
+  };
+
+  #watchlistBtnClickHandler = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        watchlist: !this.#film.userDetails.watchlist,
+      },
+    });
+  };
+
+  #watchedBtnClickHandler = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        alreadyWatched: !this.#film.userDetails.alreadyWatched,
+      },
+    });
+  };
+
+  #favoriteBtnClickHandler = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        ...this.#film.userDetails,
+        favorite: !this.#film.userDetails.favorite,
+      },
+    });
   };
 }
