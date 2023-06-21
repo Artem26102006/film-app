@@ -22,11 +22,13 @@ export default class ListOfFilmsPresenter {
   #noFilmComponent = new NoFilmView();
 
   #filmPresenter = new Map();
-
+  
   #filmDetailsPresenter = null;
   #container = null;
   #filmsModel = null;
   #commentsModel = null;
+  #selectedFilm = null;
+
   #mockFilms = [];
 
   constructor(container, filmsModel, commentsModel) {
@@ -106,23 +108,47 @@ export default class ListOfFilmsPresenter {
   #handFilmChange = (updatedFilm) => {
     this.#mockFilms = updateItem(this.#mockFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-    this.#filmDetailsPresenter.destroy();
-    this.#renderDetailsFilm(updatedFilm);
+    if (this.#filmDetailsPresenter && this.#selectedFilm.id === updatedFilm.id) {
+      this.#selectedFilm = updatedFilm;
+      this.#renderDetailsFilm();
+    }
   };
   
   #renderFilm = film => {
-    const filmComponent = new FilmPresenter(this.#filmsListContainer.element, this.#renderDetailsFilm, this.#handFilmChange);
+    const filmComponent = new FilmPresenter(this.#filmsListContainer.element, this.#addFilmDetailsComponent, this.#handFilmChange, this.#onEscKeyDown);
     filmComponent.init(film);
     this.#filmPresenter.set(film.id, filmComponent);
   }
   
-  #renderDetailsFilm = film => {
-    this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown, this.#handFilmChange);
-    this.#filmDetailsPresenter.init(film);
+  #renderDetailsFilm = () => {
+    const comments = [...this.#commentsModel.get(this.#selectedFilm)];
+    
+    if (!this.#filmDetailsPresenter) {
+      this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown, this.#handFilmChange);
+    }
+
+    this.#filmDetailsPresenter.init(this.#selectedFilm, comments);
+  };
+
+  #addFilmDetailsComponent = (film) => {
+    if (this.#selectedFilm && this.#selectedFilm.id === film.id) {
+      return;
+    }
+
+    if (this.#selectedFilm && this.#selectedFilm.id !== film.id) {
+      this.#removeFilmDetailsComponent();
+    }
+
+    this.#selectedFilm = film;
+    this.#renderDetailsFilm();
+
+    document.body.classList.add('hide-overflow');
   };
 
   #removeFilmDetailsComponent = () => {
     this.#filmDetailsPresenter.destroy();
+    this.#filmDetailsPresenter = null;
+    this.#selectedFilm = null;
     document.body.classList.remove("hide-overflow");
     document.removeEventListener("keydown", this.#onEscKeyDown);
   };
