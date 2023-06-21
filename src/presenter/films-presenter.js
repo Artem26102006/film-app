@@ -110,7 +110,7 @@ export default class ListOfFilmsPresenter {
     filmComponent.init(film);
     this.#filmPresenter.set(film.id, filmComponent);
   }
-
+  
   #renderDetailsFilm = film => {
     this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown);
     this.#filmDetailsPresenter.init(film);

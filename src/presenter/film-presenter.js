@@ -1,5 +1,5 @@
-import FilmCardView from "../view/film-card-view.js"
-import { render } from '../framework/render.js'
+import FilmCardView from "../view/film-card-view.js";
+import { render } from "../framework/render.js";
 
 export default class FilmPresenter {
   #film = null;
@@ -19,8 +19,13 @@ export default class FilmPresenter {
     this.#filmComponent = new FilmCardView(film);
 
     this.#filmComponent.setFilmClickHandler(this.#setBtnClickHandler, film);
+    
+    this.#filmComponent.setWatchlistClickHandler(this.#watchlistBtnClickHandler);
+    this.#filmComponent.setWatchedClickHandler(this.#watchedBtnClickHandler);
+    this.#filmComponent.setFavoriteClickHandler(this.#favoriteBtnClickHandler);
+
     render(this.#filmComponent, this.#filmsListContainer);
-  }
+  };
 
   destroy = () => {
     remove(this.#filmComponent);
@@ -31,7 +36,7 @@ export default class FilmPresenter {
       ...this.#film,
       userDetails: {
         ...this.#film.userDetails,
-        watchlist: !this.#film.userDetails.watchlist
+        watchlist: !this.#film.userDetails.watchlist,
       },
     });
   };
@@ -41,8 +46,8 @@ export default class FilmPresenter {
       ...this.#film,
       userDetails: {
         ...this.#film.userDetails,
-        alreadyWatched: !this.#film.userDetails.alreadyWatched
-      }
+        alreadyWatched: !this.#film.userDetails.alreadyWatched,
+      },
     });
   };
 
@@ -51,8 +56,8 @@ export default class FilmPresenter {
       ...this.#film,
       userDetails: {
         ...this.#film.userDetails,
-        favorite: !this.#film.userDetails.favorite
-      }
+        favorite: !this.#film.userDetails.favorite,
+      },
     });
   };
 }

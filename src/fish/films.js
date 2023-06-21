@@ -5,7 +5,9 @@ import {
   AgeRating, Runtime, YearsDuration, DaysDuration, DateType,
   names, surnames, titles, posters, genres, description, countries,
 } from './const.js';
+import { customAlphabet } from 'nanoid'
 
+const nanoid = customAlphabet('1234567890', 5)
 
 const getDate = (type) => {
   const date = new Date();
@@ -63,7 +65,7 @@ const generateFilms = () => {
     const alreadyWatched = Boolean(getRandomInteger(0, 1));
 
     return {
-      id: String(index + 1),
+      id: nanoid(),
       comments: (hasComments)
         ? Array.from({length: filmCommentsCount},
           (_value, commentIndex) => String(totalCommentsCount - commentIndex)
