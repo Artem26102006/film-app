@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -17,4 +19,13 @@ const updateItem = (items, update) => {
   return [...items.slice(0, index), update, ...items.slice(index + 1)];
 };
 
-export { getRandomInteger, getRandomValue, updateItem };
+const sortFilmsRating = (a, b) => {
+  return b.filmInfo.totalRating - a.filmInfo.totalRating;
+}
+
+const sortFilmDate = (a, b) => {
+  return new Date(b.filmInfo.release.date) - new Date(a.filmInfo.release.date)
+}
+
+
+export { getRandomInteger, getRandomValue, updateItem, sortFilmsRating, sortFilmDate };

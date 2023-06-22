@@ -8,6 +8,8 @@ import NoFilmView from "../view/no-film-view.js";
 import FilmDetailsPresenter from "./film-details-presenter.js";
 import FilmPresenter from "./film-presenter.js";
 import { updateItem } from "../utils/common.js";
+import { SortType } from "../const.js";
+import { sortFilmsRating, sortFilmDate } from "../utils/common.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -28,6 +30,9 @@ export default class ListOfFilmsPresenter {
   #filmsModel = null;
   #commentsModel = null;
   #selectedFilm = null;
+  
+  #currentSortType = SortType.DEFAULT;
+  #sourceBoardTasks = [];
 
   #mockFilms = [];
 
@@ -39,11 +44,15 @@ export default class ListOfFilmsPresenter {
 
   init = () => {
     this.#mockFilms = [...this.#filmsModel.films];
+
+    this.#sourceBoardTasks = [...this.#filmsModel.films];
+
     this.#renderFilms();
   };
 
   #renderSortFilms = () => {
     render(this.#sortComponent, this.#container);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderFilmsSection = () => {
@@ -105,9 +114,36 @@ export default class ListOfFilmsPresenter {
     }
   };
 
+  #sortFilms = (sortType) => {
+    switch (sortType) {
+      case SortType.RATING:
+        this.#mockFilms.sort(sortFilmsRating);
+        break;
+      case SortType.DATE:
+        this.#mockFilms.sort(sortFilmDate);
+        break;
+      default:
+        this.#mockFilms = [...this.#sourceBoardTasks];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
+
+    this.#clearFilmList();
+    this.#renderFilms();
+  };                       
+
   #handFilmChange = (updatedFilm) => {
     this.#mockFilms = updateItem(this.#mockFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+
     if (this.#filmDetailsPresenter && this.#selectedFilm.id === updatedFilm.id) {
       this.#selectedFilm = updatedFilm;
       this.#renderDetailsFilm();
@@ -124,7 +160,7 @@ export default class ListOfFilmsPresenter {
     const comments = [...this.#commentsModel.get(this.#selectedFilm)];
     
     if (!this.#filmDetailsPresenter) {
-      this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#commentsModel, this.#removeFilmDetailsComponent, this.#onEscKeyDown, this.#handFilmChange);
+      this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#removeFilmDetailsComponent, this.#onEscKeyDown, this.#handFilmChange);
     }
 
     this.#filmDetailsPresenter.init(this.#selectedFilm, comments);

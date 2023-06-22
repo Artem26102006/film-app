@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.7",
+    "moment": "^2.29.4",
     "nanoid": "^4.0.2"
   }
 }

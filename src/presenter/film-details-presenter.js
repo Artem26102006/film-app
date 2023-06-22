@@ -4,31 +4,24 @@ import { remove, render, replace } from '../framework/render.js'
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
   #container = null;
-  #filmComments = null;
   #closeBtnFilmDetails = null;
   #escClose = null;
   #film = null;
-  #comments = null
   #changeData = null
 
-  constructor(container, filmComments, closeBtnFilmDetails, escCLose, handFilmChange) {
+  constructor(container, closeBtnFilmDetails, escCLose, handFilmChange) {
     this.#container = container;
-    this.#filmComments = filmComments;
     this.#closeBtnFilmDetails = closeBtnFilmDetails;
     this.#escClose = escCLose;
     this.#changeData = handFilmChange;
   }
 
-  init = (film) => {
-    this.#comments = [...this.#filmComments.get(film)];
+  init = (film, comments) => {
     this.#film = film;
     
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
 
-    this.#filmDetailsComponent = new FilmDetailsView(this.#film, this.#comments);
-
-    document.body.classList.add("hide-overflow");
-    document.addEventListener("keydown", this.#escClose);
+    this.#filmDetailsComponent = new FilmDetailsView(this.#film, comments);
 
     this.#filmDetailsComponent.setFilmDetailsClickHandler(this.#closeBtnFilmDetails);
 
