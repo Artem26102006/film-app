@@ -1,4 +1,4 @@
-import AbstractView from "../framework/view/abstract-view.js";
+import AbstractStatefulView from "../framework/view/abstract-stateful-view.js";
 import { createFilmDetailsInfo } from "./film-details-info-view.js";
 import { createFilmDetailsControls } from "./film-details-controls-view.js";
 import { createFilmDetailsCommentsList } from "./film-details-comments-list-view.js";
@@ -33,7 +33,7 @@ const createFilmDetailsTemplate = ({ filmInfo, userDetails }, comments) =>
   </div>
 </section>`;
 
-export default class FilmDetailsView extends AbstractView {
+export default class FilmDetailsView extends AbstractStatefulView {
   #film = null;
   #comments = null;
 

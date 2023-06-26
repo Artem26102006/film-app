@@ -160,7 +160,7 @@ export default class ListOfFilmsPresenter {
     const comments = [...this.#commentsModel.get(this.#selectedFilm)];
     
     if (!this.#filmDetailsPresenter) {
-      this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#removeFilmDetailsComponent, this.#onEscKeyDown, this.#handFilmChange);
+      this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#removeFilmDetailsComponent, this.#handFilmChange);
     }
 
     this.#filmDetailsPresenter.init(this.#selectedFilm, comments);

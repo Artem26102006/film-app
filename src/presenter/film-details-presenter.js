@@ -5,14 +5,12 @@ export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
   #container = null;
   #closeBtnFilmDetails = null;
-  #escClose = null;
   #film = null;
   #changeData = null
 
-  constructor(container, closeBtnFilmDetails, escCLose, handFilmChange) {
+  constructor(container, closeBtnFilmDetails, handFilmChange) {
     this.#container = container;
     this.#closeBtnFilmDetails = closeBtnFilmDetails;
-    this.#escClose = escCLose;
     this.#changeData = handFilmChange;
   }
 
