@@ -1,9 +1,11 @@
-export const createFilmDetailsNewComment = () =>
+export const createFilmDetailsNewComment = (checkedEmotion, text) =>
   `<form class="film-details__new-comment" action="" method="get">
-    <div class="film-details__add-emoji-label"></div>
+    <div class="film-details__add-emoji-label">
+      ${(checkedEmotion) ? `<img src="./images/emoji/${checkedEmotion}.png" width="55" height="55" alt="emoji-${checkedEmotion}">` : ''}
+    </div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${(text) ? text : ''}</textarea>
     </label>
 
     <div class="film-details__emoji-list">

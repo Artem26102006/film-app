@@ -6,7 +6,14 @@ export default class FilmDetailsPresenter {
   #container = null;
   #closeBtnFilmDetails = null;
   #film = null;
+  #comments = null;
   #changeData = null
+
+  #viewData = {
+    emotion: null,
+    text: null,
+    scrollPosition: 0
+  };
 
   constructor(container, closeBtnFilmDetails, handFilmChange) {
     this.#container = container;
@@ -16,10 +23,11 @@ export default class FilmDetailsPresenter {
 
   init = (film, comments) => {
     this.#film = film;
+    this.#comments = comments;
     
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
 
-    this.#filmDetailsComponent = new FilmDetailsView(this.#film, comments);
+    this.#filmDetailsComponent = new FilmDetailsView(this.#film, this.#comments, this.#viewData, this.#updateViewData);
 
     this.#filmDetailsComponent.setFilmDetailsClickHandler(this.#closeBtnFilmDetails);
 
@@ -34,11 +42,17 @@ export default class FilmDetailsPresenter {
 
     replace(this.#filmDetailsComponent, prevFilmDetailsComponent);
 
+    this.#filmDetailsComponent.setScrollPosition();
+
     remove(prevFilmDetailsComponent);
   }
 
   destroy = () => {
     remove(this.#filmDetailsComponent);
+  };
+
+  #updateViewData = (viewData) => {
+    this.#viewData = {...viewData};
   };
 
   #watchlistBtnClickHandler = () => {
