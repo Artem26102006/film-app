@@ -12,7 +12,7 @@ export default class FilmDetailsPresenter {
   #viewData = {
     emotion: null,
     text: null,
-    scrollPosition: 0
+    scrollPosition: 0,
   };
 
   constructor(container, closeBtnFilmDetails, handFilmChange) {

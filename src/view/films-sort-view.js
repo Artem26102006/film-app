@@ -10,22 +10,28 @@ const createSortViewTemplate = () =>
     </ul>
   `;
 
-export default class SortView extends AbstractView{
+export default class SortView extends AbstractView {
   get template() {
     return createSortViewTemplate();
   }
 
-  setSortTypeChangeHandler = (callback) => {
+  setSortTypeChangeHandler = callback => {
     this._callback.sortTypeChange = callback;
-    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+    this.element.addEventListener("click", this.#sortTypeChangeHandler);
   };
 
   #sortTypeChangeHandler = evt => {
-    if (evt.target.tagName !== 'A') {
+    if (evt.target.tagName !== "A") {
       return;
     }
 
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
+
+    this.element.querySelectorAll(".sort__button").forEach(item => {
+      item.classList.remove('sort__button--active')
+    });
+
+    evt.target.classList.add('sort__button--active')
   };
 }

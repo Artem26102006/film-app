@@ -45,13 +45,14 @@ export default class FilmDetailsView extends AbstractStatefulView {
     );
 
     this.updateViewData = updateViewData;
+
     this.#setInnerHandlers();
   }
-
+  
   get template() {
     return createFilmDetailsTemplate(this._state);
   }
-
+  
   static parseFilmToState = (
     film,
     comments,
