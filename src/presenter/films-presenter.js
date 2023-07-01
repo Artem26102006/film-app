@@ -15,7 +15,7 @@ const FILM_COUNT_PER_STEP = 5;
 
 export default class ListOfFilmsPresenter {
   #renderedFilmCount = FILM_COUNT_PER_STEP;
-  
+
   #films = new FilmsView();
   #filmsList = new FilmsListView();
   #filmsListContainer = new FilmsListContainerView();
@@ -24,13 +24,13 @@ export default class ListOfFilmsPresenter {
   #noFilmComponent = new NoFilmView();
 
   #filmPresenter = new Map();
-  
+
   #filmDetailsPresenter = null;
   #container = null;
   #filmsModel = null;
   #commentsModel = null;
   #selectedFilm = null;
-  
+
   #currentSortType = SortType.DEFAULT;
   #sourceBoardTasks = [];
 
@@ -70,12 +70,14 @@ export default class ListOfFilmsPresenter {
   #renderFilmButtonMore = () => {
     render(this.#filmButtonMoreComponent, this.#filmsList.element);
 
-    this.#filmButtonMoreComponent.setButtonClickHandler(this.#handLoadMoreButtonClick);
+    this.#filmButtonMoreComponent.setButtonClickHandler(
+      this.#handLoadMoreButtonClick
+    );
   };
 
   #renderNoFilms = () => {
     render(this.#noFilmComponent, this.#filmsListContainer.element);
-  }
+  };
 
   #renderFilms = () => {
     this.#renderSortFilms();
@@ -103,7 +105,10 @@ export default class ListOfFilmsPresenter {
 
   #handLoadMoreButtonClick = () => {
     this.#mockFilms
-      .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
+      .slice(
+        this.#renderedFilmCount,
+        this.#renderedFilmCount + FILM_COUNT_PER_STEP
+      )
       .forEach(film => this.#renderFilm(film));
 
     this.#renderedFilmCount += FILM_COUNT_PER_STEP;
@@ -114,7 +119,7 @@ export default class ListOfFilmsPresenter {
     }
   };
 
-  #sortFilms = (sortType) => {
+  #sortFilms = sortType => {
     switch (sortType) {
       case SortType.RATING:
         this.#mockFilms.sort(sortFilmsRating);
@@ -127,9 +132,9 @@ export default class ListOfFilmsPresenter {
     }
 
     this.#currentSortType = sortType;
-  }
+  };
 
-  #handleSortTypeChange = (sortType) => {
+  #handleSortTypeChange = sortType => {
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -138,35 +143,48 @@ export default class ListOfFilmsPresenter {
 
     this.#clearFilmList();
     this.#renderFilms();
-  };                       
+  };
 
-  #handFilmChange = (updatedFilm) => {
+  #handFilmChange = updatedFilm => {
     this.#mockFilms = updateItem(this.#mockFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
 
-    if (this.#filmDetailsPresenter && this.#selectedFilm.id === updatedFilm.id) {
+    if (
+      this.#filmDetailsPresenter &&
+      this.#selectedFilm.id === updatedFilm.id
+    ) {
       this.#selectedFilm = updatedFilm;
       this.#renderDetailsFilm();
     }
   };
-  
+
   #renderFilm = film => {
-    const filmComponent = new FilmPresenter(this.#filmsListContainer.element, this.#addFilmDetailsComponent, this.#handFilmChange, this.#onEscKeyDown);
+    const filmComponent = new FilmPresenter(
+      this.#filmsListContainer.element,
+      this.#addFilmDetailsComponent,
+      this.#handFilmChange,
+      this.#onEscKeyDown
+    );
+
     filmComponent.init(film);
     this.#filmPresenter.set(film.id, filmComponent);
-  }
-  
+  };
+
   #renderDetailsFilm = () => {
     const comments = [...this.#commentsModel.get(this.#selectedFilm)];
-    
+
     if (!this.#filmDetailsPresenter) {
-      this.#filmDetailsPresenter = new FilmDetailsPresenter(this.#container, this.#removeFilmDetailsComponent, this.#handFilmChange);
+      this.#filmDetailsPresenter = new FilmDetailsPresenter(
+        this.#container,
+        this.#removeFilmDetailsComponent,
+        this.#handFilmChange
+      );
     }
 
     this.#filmDetailsPresenter.init(this.#selectedFilm, comments);
   };
 
-  #addFilmDetailsComponent = (film) => {
+  #addFilmDetailsComponent = film => {
     if (this.#selectedFilm && this.#selectedFilm.id === film.id) {
       return;
     }
@@ -178,7 +196,7 @@ export default class ListOfFilmsPresenter {
     this.#selectedFilm = film;
     this.#renderDetailsFilm();
 
-    document.body.classList.add('hide-overflow');
+    document.body.classList.add("hide-overflow");
   };
 
   #removeFilmDetailsComponent = () => {

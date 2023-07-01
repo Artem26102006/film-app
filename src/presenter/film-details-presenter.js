@@ -1,5 +1,5 @@
-import FilmDetailsView from '../view/film-details-view.js';
-import { remove, render, replace } from '../framework/render.js'
+import FilmDetailsView from "../view/film-details-view.js";
+import { remove, render, replace } from "../framework/render.js";
 
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
@@ -7,7 +7,7 @@ export default class FilmDetailsPresenter {
   #closeBtnFilmDetails = null;
   #film = null;
   #comments = null;
-  #changeData = null
+  #changeData = null;
 
   #viewData = {
     emotion: null,
@@ -24,16 +24,29 @@ export default class FilmDetailsPresenter {
   init = (film, comments) => {
     this.#film = film;
     this.#comments = comments;
-    
+
     const prevFilmDetailsComponent = this.#filmDetailsComponent;
 
-    this.#filmDetailsComponent = new FilmDetailsView(this.#film, this.#comments, this.#viewData, this.#updateViewData);
+    this.#filmDetailsComponent = new FilmDetailsView(
+      this.#film,
+      this.#comments,
+      this.#viewData,
+      this.#updateViewData
+    );
 
-    this.#filmDetailsComponent.setFilmDetailsClickHandler(this.#closeBtnFilmDetails);
+    this.#filmDetailsComponent.setFilmDetailsClickHandler(
+      this.#closeBtnFilmDetails
+    );
 
-    this.#filmDetailsComponent.setWatchlistClickHandler(this.#watchlistBtnClickHandler);
-    this.#filmDetailsComponent.setWatchedClickHandler(this.#watchedBtnClickHandler);
-    this.#filmDetailsComponent.setFavoriteClickHandler(this.#favoriteBtnClickHandler);
+    this.#filmDetailsComponent.setWatchlistClickHandler(
+      this.#watchlistBtnClickHandler
+    );
+    this.#filmDetailsComponent.setWatchedClickHandler(
+      this.#watchedBtnClickHandler
+    );
+    this.#filmDetailsComponent.setFavoriteClickHandler(
+      this.#favoriteBtnClickHandler
+    );
 
     if (prevFilmDetailsComponent === null) {
       render(this.#filmDetailsComponent, this.#container.parentElement);
@@ -45,14 +58,14 @@ export default class FilmDetailsPresenter {
     this.#filmDetailsComponent.setScrollPosition();
 
     remove(prevFilmDetailsComponent);
-  }
+  };
 
   destroy = () => {
     remove(this.#filmDetailsComponent);
   };
 
-  #updateViewData = (viewData) => {
-    this.#viewData = {...viewData};
+  #updateViewData = viewData => {
+    this.#viewData = { ...viewData };
   };
 
   #watchlistBtnClickHandler = () => {

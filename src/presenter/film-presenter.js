@@ -9,7 +9,12 @@ export default class FilmPresenter {
   #escKeyDownHandler = null;
   #changeData = null;
 
-  constructor(listContainer, clickCardHandler, handFilmChange, escKeyDownHandler) {
+  constructor(
+    listContainer,
+    clickCardHandler,
+    handFilmChange,
+    escKeyDownHandler
+  ) {
     this.#filmsListContainer = listContainer;
     this.#clickCardHandler = clickCardHandler;
     this.#changeData = handFilmChange;
@@ -25,12 +30,18 @@ export default class FilmPresenter {
 
     this.#filmCardComponent.setFilmClickHandler(() => {
       this.#clickCardHandler(this.#film);
-      document.addEventListener('keydown', this.#escKeyDownHandler);
+      document.addEventListener("keydown", this.#escKeyDownHandler);
     });
-    
-    this.#filmCardComponent.setWatchlistClickHandler(this.#watchlistBtnClickHandler);
-    this.#filmCardComponent.setWatchedClickHandler(this.#watchedBtnClickHandler);
-    this.#filmCardComponent.setFavoriteClickHandler(this.#favoriteBtnClickHandler);
+
+    this.#filmCardComponent.setWatchlistClickHandler(
+      this.#watchlistBtnClickHandler
+    );
+    this.#filmCardComponent.setWatchedClickHandler(
+      this.#watchedBtnClickHandler
+    );
+    this.#filmCardComponent.setFavoriteClickHandler(
+      this.#favoriteBtnClickHandler
+    );
 
     if (prevFilmCardComponent === null) {
       render(this.#filmCardComponent, this.#filmsListContainer);

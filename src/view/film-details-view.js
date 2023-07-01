@@ -4,7 +4,13 @@ import { createFilmDetailsControls } from "./film-details-controls-view.js";
 import { createFilmDetailsCommentsList } from "./film-details-comments-list-view.js";
 import { createFilmDetailsNewComment } from "./film-details-new-comment.js";
 
-const createFilmDetailsTemplate = ({ filmInfo, userDetails, comments, checkedEmotion, text }) =>
+const createFilmDetailsTemplate = ({
+  filmInfo,
+  userDetails,
+  comments,
+  checkedEmotion,
+  text,
+}) =>
   `<section class="film-details">
   <div class="film-details__inner">
     <div class="film-details__top-container">
@@ -48,11 +54,11 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
     this.#setInnerHandlers();
   }
-  
+
   get template() {
     return createFilmDetailsTemplate(this._state);
   }
-  
+
   static parseFilmToState = (
     film,
     comments,
@@ -143,17 +149,17 @@ export default class FilmDetailsView extends AbstractStatefulView {
       .addEventListener("input", this.#commentInputChangeHandler);
   };
 
-  #emotionClickHandler = (evt) => {
+  #emotionClickHandler = evt => {
     evt.preventDefault();
     this.updateElement({
       checkedEmotion: evt.target.value,
-      scrollPosition: this.element.scrollTop
+      scrollPosition: this.element.scrollTop,
     });
   };
 
-  #commentInputChangeHandler = (evt) => {
+  #commentInputChangeHandler = evt => {
     evt.preventDefault();
-    this._setState({text: evt.target.value});
+    this._setState({ text: evt.target.value });
   };
 
   #updateViewData = () => {
