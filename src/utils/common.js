@@ -15,5 +15,4 @@ const sortFilmDate = (a, b) => {
   return new Date(b.filmInfo.release.date) - new Date(a.filmInfo.release.date)
 }
 
-
 export { getRandomInteger, getRandomValue, sortFilmsRating, sortFilmDate };

@@ -1,5 +1,6 @@
 import FilmDetailsView from "../view/film-details-view.js";
 import { remove, render, replace } from "../framework/render.js";
+import {UserAction, UpdateType} from '../const.js';
 
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
@@ -68,8 +69,16 @@ export default class FilmDetailsPresenter {
     this.#viewData = { ...viewData };
   };
 
+  clearViewData = () => {
+    this.#updateViewData({
+      text: null,
+      emotion: null,
+      scrollPosition: this.#viewData.scrollPosition
+    });
+  };
+
   #watchlistBtnClickHandler = () => {
-    this.#changeData({
+    this.#changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, {
       ...this.#film,
       userDetails: {
         ...this.#film.userDetails,
@@ -79,7 +88,7 @@ export default class FilmDetailsPresenter {
   };
 
   #watchedBtnClickHandler = () => {
-    this.#changeData({
+    this.#changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, {
       ...this.#film,
       userDetails: {
         ...this.#film.userDetails,
@@ -89,7 +98,7 @@ export default class FilmDetailsPresenter {
   };
 
   #favoriteBtnClickHandler = () => {
-    this.#changeData({
+    this.#changeData(UserAction.UPDATE_FILM, UpdateType.PATCH, {
       ...this.#film,
       userDetails: {
         ...this.#film.userDetails,
