@@ -55,7 +55,7 @@ export default class ListOfFilmsPresenter {
   }
 
   init = () => {
-    this.#renderFilms();
+    this.#renderFilmBoard();
   };
 
   #renderSortFilms = () => {
@@ -87,21 +87,16 @@ export default class ListOfFilmsPresenter {
     render(this.#noFilmComponent, this.#filmsListContainer.element);
   };
 
-  #renderFilms = () => {
-    this.#renderSortFilms();
-    this.#renderFilmsSection();
-    this.#renderFilmsList();
-    this.#renderFilmsContainer();
-
-    if (this.films.length === 0) {
+  #renderFilms = (films) => {
+    if (films.length === 0) {
       this.#renderNoFilms();
     } else {
       for (
         let i = 0;
-        i < Math.min(this.films.length, FILM_COUNT_PER_STEP);
+        i < Math.min(films.length, FILM_COUNT_PER_STEP);
         i++
       ) {
-        const film = this.films[i];
+        const film = films[i];
         this.#renderFilm(film);
       }
 
@@ -146,7 +141,7 @@ export default class ListOfFilmsPresenter {
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
-      case "PATCH":
+      case UpdateType.PATCH:
         if (this.#filmPresenter.get(data.id)) {
           this.#filmPresenter.get(data.id).init(data);
         }
@@ -155,11 +150,11 @@ export default class ListOfFilmsPresenter {
           this.#renderDetailsFilm();
         }
         break;
-      case "MINOR":
+      case UpdateType.MINOR:
         this.#clearFilmBoard();
         this.#renderFilmBoard();
         break;
-      case "MAJOR":
+      case UpdateType.MAJOR:
         this.#clearFilmBoard({
           resetRenderedFilmCount: true,
           resetSortType: true,
@@ -176,8 +171,9 @@ export default class ListOfFilmsPresenter {
 
     this.#currentSortType = sortType;
 
+    const films = this.films.slice(0, Math.min(this.films.length, FILM_COUNT_PER_STEP));
     this.#clearFilmList();
-    this.#renderFilms();
+    this.#renderFilms(films);
   };
 
   #renderFilm = film => {
@@ -233,7 +229,10 @@ export default class ListOfFilmsPresenter {
     }
 
     this.#renderSortFilms();
-    this.#renderFilms();
+    this.#renderFilmsSection();
+    this.#renderFilmsList();
+    this.#renderFilmsContainer();
+    this.#renderFilms(films);
   }
 
   #clearFilmBoard = ({
