@@ -82,6 +82,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.setWatchlistClickHandler(this._callback.watchlistClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setDeleteCommentUser(this._callback.deleteComment)
   };
 
   setScrollPosition = () => {
@@ -115,6 +116,19 @@ export default class FilmDetailsView extends AbstractStatefulView {
       .querySelector(".film-details__control-button--favorite")
       .addEventListener("click", this.#clickFavoriteHandler);
   }
+
+  setDeleteCommentUser(callback) {
+    this._callback.deleteComment = callback;
+    this.element.querySelectorAll(".film-details__comment-delete").forEach(button => {
+      button.addEventListener("click", this.#clickDeleteComment)
+    });
+  }
+
+  #clickDeleteComment = evt => {
+    evt.preventDefault();
+    this.#updateViewData();
+    this._callback.deleteComment(evt.target.dataset.commentId);
+  };
 
   #clickFavoriteHandler = evt => {
     evt.preventDefault();

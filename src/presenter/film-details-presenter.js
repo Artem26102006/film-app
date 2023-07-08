@@ -1,6 +1,6 @@
 import FilmDetailsView from "../view/film-details-view.js";
 import { remove, render, replace } from "../framework/render.js";
-import {UserAction, UpdateType} from '../const.js';
+import { UserAction, UpdateType } from "../const.js";
 
 export default class FilmDetailsPresenter {
   #filmDetailsComponent = null;
@@ -48,6 +48,7 @@ export default class FilmDetailsPresenter {
     this.#filmDetailsComponent.setFavoriteClickHandler(
       this.#favoriteBtnClickHandler
     );
+    this.#filmDetailsComponent.setDeleteCommentUser(this.#deleteCommentUser);
 
     if (prevFilmDetailsComponent === null) {
       render(this.#filmDetailsComponent, this.#container.parentElement);
@@ -73,7 +74,7 @@ export default class FilmDetailsPresenter {
     this.#updateViewData({
       text: null,
       emotion: null,
-      scrollPosition: this.#viewData.scrollPosition
+      scrollPosition: this.#viewData.scrollPosition,
     });
   };
 
@@ -105,5 +106,28 @@ export default class FilmDetailsPresenter {
         favorite: !this.#film.userDetails.favorite,
       },
     });
+  };
+
+  createComment = () => {
+
+  };
+
+  #deleteCommentUser = commentId => {
+    const filmCommentIdIndex = this.#film.comments.findIndex(id => id === commentId);
+
+    const deletedComment = this.#comments.find(comment => comment.id === commentId);
+
+    this.#changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      {
+        ...this.#film,
+        comments: [
+          ...this.#film.comments.slice(0, filmCommentIdIndex),
+          ...this.#film.comments.slice(filmCommentIdIndex + 1)
+        ],
+      },
+      deletedComment
+    );
   };
 }

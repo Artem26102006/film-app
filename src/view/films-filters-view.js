@@ -1,32 +1,25 @@
 import AbstractView from "../framework/view/abstract-view.js";
+import { FilterType, FILTER_TYPE_ALL_NAME } from "../const.js";
 
-const FILTER_TYPE_ALL_NAME = 'All movies';
-
-const FilterType = {
-  ALL: 'all',
-  WATCHLIST: 'watchlist',
-  HISTORY: 'history',
-  FAVORITES: 'favorites',
-};
-
-const createFilterItemTemplate = ({name, count}, isActive) => {
-  const getFilterName = (filterName) =>
-    (filterName === FilterType.ALL)
+const createFilterItemTemplate = ({ name, count }, currentFilter) => {
+  const getFilterName = filterName =>
+    filterName === FilterType.ALL
       ? FILTER_TYPE_ALL_NAME
       : `${filterName.charAt(0).toUpperCase()}${filterName.slice(1)}`;
 
-  const getFilterTextContent = (filterName) =>
-    (filterName !== FilterType.ALL)
+  const getFilterTextContent = filterName =>
+    filterName !== FilterType.ALL
       ? `<span class="main-navigation__item-count">${count}</span>`
-      : '';
+      : "";
 
   return `
     <a
       href="#${name}"
       class="
         main-navigation__item
-        ${(isActive) ? 'main-navigation__item--active' : ''}
+        ${name === currentFilter ? "main-navigation__item--active" : ""}
       "
+      data-filter-type=${name}
     >
       ${getFilterName(name)}
       ${getFilterTextContent(name)}
@@ -34,10 +27,10 @@ const createFilterItemTemplate = ({name, count}, isActive) => {
   `;
 };
 
-const createFilmsFiltersViewTemplate = (filters) => {
+const createFilterViewTemplate = (filters, currentFilter) => {
   const filterItems = filters
-    .map((filter, index) => createFilterItemTemplate(filter, index === 0))
-    .join('');
+    .map(filter => createFilterItemTemplate(filter, currentFilter))
+    .join("");
 
   return `
     <nav class="main-navigation">
@@ -48,13 +41,29 @@ const createFilmsFiltersViewTemplate = (filters) => {
 
 export default class FilmsFiltersView extends AbstractView {
   #filters = null;
+  #currentFilter = null;
 
-  constructor(filters) {
+  constructor(filters, currentFilter) {
     super();
-    this.#filters = filters
+    this.#filters = filters;
+    this.#currentFilter = currentFilter;
   }
 
   get template() {
-    return createFilmsFiltersViewTemplate(this.#filters);
+    return createFilterViewTemplate(this.#filters, this.#currentFilter);
   }
+
+  setFilterTypeClickHandler(callback) {
+    this._callback.filterTypeClick = callback;
+    this.element.addEventListener("click", this.#filterTypeClickHandler);
+  }
+
+  #filterTypeClickHandler = evt => {
+    if (evt.target.tagName !== "A") {
+      return;
+    }
+
+    evt.preventDefault();
+    this._callback.filterTypeClick(evt.target.dataset.filterType);
+  };
 }

@@ -10,6 +10,7 @@ import FilmPresenter from "./film-presenter.js";
 import { SortType } from "../const.js";
 import { sortFilmsRating, sortFilmDate } from "../utils/common.js";
 import { UpdateType, UserAction } from "../const.js";
+import {filter} from '../utils/filter.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -32,26 +33,34 @@ export default class ListOfFilmsPresenter {
 
   #filmsModel = null;
   #commentsModel = null;
+  #filterModel = null;
 
   #currentSortType = SortType.DEFAULT;
 
-  constructor(container, filmsModel, commentsModel) {
+  constructor(container, filmsModel, commentsModel, filterModel) {
     this.#container = container;
     this.#filmsModel = filmsModel;
     this.#commentsModel = commentsModel;
+    this.#filterModel = filterModel;
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get films() {
+    const filterType = this.#filterModel.filter;
+    const films = this.#filmsModel.films;
+
+    const filteredFilms = filter[filterType](films);
+
     switch (this.#currentSortType) {
       case SortType.RATING:
-        return [...this.#filmsModel.films].sort(sortFilmsRating);
+        return filteredFilms.sort(sortFilmsRating);
       case SortType.DATE:
-        return [...this.#filmsModel.films].sort(sortFilmDate);
+        return filteredFilms.sort(sortFilmDate);
     }
 
-    return this.#filmsModel.films;
+    return filteredFilms;
   }
 
   init = () => {
@@ -130,11 +139,11 @@ export default class ListOfFilmsPresenter {
       case UserAction.ADD_COMMENT:
         this.#commentsModel.addComment(updateType, updateComment);
         this.#filmDetailsPresenter.clearViewData();
-        this.filmsModel.update(updateType, updateFilm);
+        this.#filmsModel.update(updateType, updateFilm);
         break;
       case UserAction.DELETE_COMMENT:
         this.#commentsModel.deleteComment(updateType, updateComment);
-        this.filmsModel.update(updateType, updateFilm);
+        this.#filmsModel.update(updateType, updateFilm);
         break;
     }
   };
@@ -151,8 +160,9 @@ export default class ListOfFilmsPresenter {
         }
         break;
       case UpdateType.MINOR:
-        this.#clearFilmBoard();
-        this.#renderFilmBoard();
+        const films = this.films.slice(0, Math.min(this.films.length, FILM_COUNT_PER_STEP));
+        this.#clearFilmList();
+        this.#renderFilms(films);
         break;
       case UpdateType.MAJOR:
         this.#clearFilmBoard({

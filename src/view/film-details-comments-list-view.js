@@ -1,6 +1,6 @@
 import { formatStringToDate } from "../util.js";
 
-const createCommentTemplate = ({ emotion, text, author, date }) =>
+const createCommentTemplate = ({id, emotion, text, author, date }) =>
   `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -13,7 +13,7 @@ const createCommentTemplate = ({ emotion, text, author, date }) =>
           <span class="film-details__comment-day">${formatStringToDate(
             date
           )}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-comment-id=${id}>Delete</button>
         </p>
       </div>
     </li>
