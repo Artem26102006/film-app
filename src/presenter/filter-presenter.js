@@ -49,7 +49,7 @@ export default class FilterPresenter {
 
     const prevFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = ne;
+    this.#filterComponent = new FilmsFiltersView(filters, this.#currentFilter);
     this.#filterComponent.setFilterTypeClickHandler(
       this.#filterTypeChangeHandler
     );
