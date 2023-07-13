@@ -1,4 +1,4 @@
-import { remove, render } from "../framework/render.js";
+import { remove, render, replace } from "../framework/render.js";
 import FilmsSortView from "../view/films-sort-view.js";
 import FilmsView from "../view/films-view.js";
 import FilmsListView from "../view/films-list-view.js";
@@ -20,7 +20,7 @@ export default class ListOfFilmsPresenter {
   #films = new FilmsView();
   #filmsList = new FilmsListView();
   #filmsListContainer = new FilmsListContainerView();
-  #sortComponent = new FilmsSortView();
+  #sortComponent = null;
   #filmButtonMoreComponent = new FilmButtonMoreView();
   #noFilmComponent = new NoFilmView();
 
@@ -67,8 +67,29 @@ export default class ListOfFilmsPresenter {
     this.#renderFilmBoard();
   };
 
+  #handleSortTypeChange = sortType => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+
+    const films = this.films.slice(0, Math.min(this.films.length, FILM_COUNT_PER_STEP));
+    this.#clearFilmList();
+    this.#renderSortFilms();
+    this.#renderFilms(films);
+  };
+
   #renderSortFilms = () => {
-    render(this.#sortComponent, this.#container);
+    if (!this.#sortComponent) {
+      this.#sortComponent = new FilmsSortView(this.#currentSortType);
+      render(this.#sortComponent, this.#container);
+    } else {
+      const updatedSortComponent = new FilmsSortView(this.#currentSortType);
+      replace(updatedSortComponent, this.#sortComponent);
+      this.#sortComponent = updatedSortComponent;
+    }
+
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
@@ -174,18 +195,6 @@ export default class ListOfFilmsPresenter {
     }
   };
 
-  #handleSortTypeChange = sortType => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-
-    const films = this.films.slice(0, Math.min(this.films.length, FILM_COUNT_PER_STEP));
-    this.#clearFilmList();
-    this.#renderFilms(films);
-  };
-
   #renderFilm = film => {
     const filmComponent = new FilmPresenter(
       this.#filmsListContainer.element,
@@ -208,6 +217,8 @@ export default class ListOfFilmsPresenter {
         this.#handleViewAction
       );
     }
+
+    document.addEventListener('keydown', this.#onCtrlEnterDown);
 
     this.#filmDetailsPresenter.init(this.#selectedFilm, comments);
   };
@@ -277,6 +288,13 @@ export default class ListOfFilmsPresenter {
       evt.preventDefault();
       this.#removeFilmDetailsComponent();
       document.removeEventListener("keydown", this.#onEscKeyDown);
+    }
+  };
+
+  #onCtrlEnterDown = (evt) => {
+    if (evt.key === 'Enter' && (evt.metaKey || evt.ctrlKey)) {
+      evt.preventDefault();
+      this.#filmDetailsPresenter.createComment();
     }
   };
 

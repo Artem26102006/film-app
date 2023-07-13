@@ -26,6 +26,7 @@ export default class CommentsModel extends Observable {
 
   addComment = (updateType, update) => {
     this.#allComments.push(update);
+    console.log(this.#allComments);
     this._notify(updateType, update);
   };
 

@@ -85,6 +85,10 @@ export default class FilmDetailsView extends AbstractStatefulView {
     this.setDeleteCommentUser(this._callback.deleteComment)
   };
 
+  setCommentData = () => {
+    this.#updateViewData();
+  };
+
   setScrollPosition = () => {
     this.element.scrollTop = this._state.scrollPosition;
   };

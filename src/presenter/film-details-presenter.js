@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import FilmDetailsView from "../view/film-details-view.js";
 import { remove, render, replace } from "../framework/render.js";
 import { UserAction, UpdateType } from "../const.js";
@@ -109,7 +110,34 @@ export default class FilmDetailsPresenter {
   };
 
   createComment = () => {
+    this.#filmDetailsComponent.setCommentData();
 
+    const {emotion, text} = this.#viewData;
+
+    if (emotion && text) {
+      const newCommentId = nanoid();
+
+      const createdComment = {
+        id: newCommentId,
+        author: 'Artem',
+        date: new Date(),
+        emotion,
+        text
+      };
+
+      this.#changeData(
+        UserAction.ADD_COMMENT,
+        UpdateType.PATCH,
+        {
+          ...this.#film,
+          comments: [
+            ...this.#film.comments,
+            newCommentId
+          ]
+        },
+        createdComment
+      );
+    }
   };
 
   #deleteCommentUser = commentId => {
