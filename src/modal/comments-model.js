@@ -31,8 +31,8 @@ export default class CommentsModel extends Observable {
   };
 
   deleteComment = (updateType, update) => {
-    const index = this.#allComments.findIndex(commnet => {
-      commnet.id === update.id;
+    const index = this.#allComments.findIndex(comment => {
+      comment.id === update.id;
     });
 
     this.#allComments = [
