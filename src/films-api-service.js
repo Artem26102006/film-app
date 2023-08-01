@@ -36,8 +36,8 @@ export default class FilmsApiService extends ApiService {
         "writers": film.filmInfo.writers,
         "actors": film.filmInfo.actors,
         "release": {
-          "date": film.filmInfo.date,
-          "release_country": film.filmInfo.releaseCountry,
+          "date": film.filmInfo.release.date,
+          "release_country": film.filmInfo.release.releaseCountry,
         },
         "runtime": film.filmInfo.runtime,
         "genre": film.filmInfo.genre,

@@ -8,6 +8,7 @@ import FilmsModel from "./modal/films-model.js";
 import CommentsModel from "./modal/comments-model.js";
 import FilterModel from "./modal/filter-model.js";
 import FilmsApiService from "./films-api-service.js";
+import CommentsApiService from "./comments-api-service.js";
 
 import {getUserStatus} from './utils/user.js';
 
@@ -21,7 +22,8 @@ const footer = bodyElement.querySelector(".footer");
 
 const filmsModel = new FilmsModel(new FilmsApiService(END_POINT, AUTHORIZATION));
 
-const commentsModel = new CommentsModel(filmsModel);
+const commentsModel = new CommentsModel(new CommentsApiService(END_POINT, AUTHORIZATION));
+
 const filterModel = new FilterModel();
 
 const listOfFilms = new ListOfFilmsPresenter(main, filmsModel, commentsModel, filterModel);

@@ -8,10 +8,6 @@ export default class FilmsModel extends Observable {
   constructor(filmsApiService) {
     super();
     this.#filmsApiService = filmsApiService;
-
-    this.#filmsApiService.films.then(films => {
-      // ...
-    });
   }
 
   get films() {
@@ -58,8 +54,8 @@ export default class FilmsModel extends Observable {
         writers: film["film_info"]["writers"],
         actors: film["film_info"]["actors"],
         release: {
-          date: film["film_info"]["date"],
-          releaseСountry: film["film_info"]["release_country"],
+          date: film["film_info"]["release"]["date"],
+          releaseСountry: film["film_info"]["release"]["release_country"],
         },
         runtime: film["film_info"]["runtime"],
         genre: film["film_info"]["genre"],

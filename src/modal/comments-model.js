@@ -1,45 +1,42 @@
 import Observable from "../framework/observable.js";
-import { generateComments } from "../fish/comments.js";
-
+import { UpdateType } from "../const.js";
 export default class CommentsModel extends Observable {
-  #filmsModel = null;
-  #allComments = [];
+  #commentsApiService = null;
   #comments = [];
 
-  constructor(filmsModel) {
+  constructor(commentsApiService) {
     super();
-    this.#filmsModel = filmsModel;
-    this.#generateAllComments();
+    this.#commentsApiService = commentsApiService;
   }
 
-  #generateAllComments() {
-    this.#allComments = generateComments(this.#filmsModel.films);
-  }
-
-  get = film => {
-    this.#comments = film.comments.map(commentId =>
-      this.#allComments.find(comment => comment.id === commentId)
-    );
-
+  comment = async (id) => {
+    this.#comments = await this.#commentsApiService.get(id);
     return this.#comments;
-  };
+  }
+  // get = film => {
+  //   this.#comments = film.comments.map(commentId =>
+  //     this.#allComments.find(comment => comment.id === commentId)
+  //   );
 
-  addComment = (updateType, update) => {
-    this.#allComments.push(update);
-    console.log(this.#allComments);
-    this._notify(updateType, update);
-  };
+  //   return this.#comments;
+  // };
 
-  deleteComment = (updateType, update) => {
-    const index = this.#allComments.findIndex(comment => {
-      comment.id === update.id;
-    });
+  // addComment = (updateType, update) => {
+  //   this.#allComments.push(update);
+  //   console.log(this.#allComments);
+  //   this._notify(updateType, update);
+  // };
 
-    this.#allComments = [
-      ...this.#allComments.slice(0, index),
-      ...this.#allComments.slice(index + 1),
-    ];
+  // deleteComment = (updateType, update) => {
+  //   const index = this.#allComments.findIndex(comment => {
+  //     comment.id === update.id;
+  //   });
 
-    this._notify(updateType);
-  };
+  //   this.#allComments = [
+  //     ...this.#allComments.slice(0, index),
+  //     ...this.#allComments.slice(index + 1),
+  //   ];
+
+  //   this._notify(updateType);
+  // };
 }

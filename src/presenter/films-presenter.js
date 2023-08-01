@@ -7,6 +7,7 @@ import FilmButtonMoreView from "../view/film-button-more-view.js";
 import NoFilmView from "../view/no-film-view.js";
 import FilmDetailsPresenter from "./film-details-presenter.js";
 import FilmPresenter from "./film-presenter.js";
+import LoadingView from "../view/loading-view.js";
 import { SortType } from "../const.js";
 import { sortFilmsRating, sortFilmDate } from "../utils/common.js";
 import { UpdateType, UserAction } from "../const.js";
@@ -23,6 +24,7 @@ export default class ListOfFilmsPresenter {
   #sortComponent = null;
   #filmButtonMoreComponent = new FilmButtonMoreView();
   #noFilmComponent = new NoFilmView();
+  #loadingComponent = new LoadingView();
 
   #filmPresenter = new Map();
 
@@ -34,6 +36,7 @@ export default class ListOfFilmsPresenter {
   #filmsModel = null;
   #commentsModel = null;
   #filterModel = null;
+  #isLoading = true;
 
   #currentSortType = SortType.DEFAULT;
 
@@ -120,6 +123,10 @@ export default class ListOfFilmsPresenter {
     render(this.#noFilmComponent, this.#filmsListContainer.element);
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#filmsListContainer.element);
+  };
+
   #renderFilms = films => {
     for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
       const film = films[i];
@@ -167,11 +174,12 @@ export default class ListOfFilmsPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.INIT:
-        this.#renderFilmBoard();
-        console.log()
         if (this.#filmsModel.films.length === 0) {
           this.#renderNoFilms();
         }
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderFilmBoard();
         break;
       case UpdateType.PATCH:
         if (this.#filmPresenter.get(data.id)) {
@@ -212,8 +220,8 @@ export default class ListOfFilmsPresenter {
     this.#filmPresenter.set(film.id, filmComponent);
   };
 
-  #renderDetailsFilm = () => {
-    const comments = [...this.#commentsModel.get(this.#selectedFilm)];
+  #renderDetailsFilm = async () => {
+    const comments = await this.#commentsModel.comment(this.#selectedFilm.id);
 
     if (!this.#filmDetailsPresenter) {
       this.#filmDetailsPresenter = new FilmDetailsPresenter(
@@ -244,15 +252,21 @@ export default class ListOfFilmsPresenter {
   };
 
   #renderFilmBoard() {
+    this.#renderSortFilms();
+    this.#renderFilmsSection();
+    this.#renderFilmsList();
+    this.#renderFilmsContainer();
+
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const films = this.films.slice(
       0,
       Math.min(this.films.length, FILM_COUNT_PER_STEP)
     );
 
-    this.#renderSortFilms();
-    this.#renderFilmsSection();
-    this.#renderFilmsList();
-    this.#renderFilmsContainer();
     this.#renderFilms(films);
   }
 
