@@ -20,6 +20,7 @@ const main = bodyElement.querySelector(".main");
 const footer = bodyElement.querySelector(".footer");
 
 const filmsModel = new FilmsModel(new FilmsApiService(END_POINT, AUTHORIZATION));
+
 const commentsModel = new CommentsModel(filmsModel);
 const filterModel = new FilterModel();
 
@@ -35,3 +36,4 @@ render(new FooterStatisticsView(filmCount), footer);
 
 filterPresenter.init();
 listOfFilms.init();
+filmsModel.init();

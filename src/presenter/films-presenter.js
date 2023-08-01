@@ -10,7 +10,7 @@ import FilmPresenter from "./film-presenter.js";
 import { SortType } from "../const.js";
 import { sortFilmsRating, sortFilmDate } from "../utils/common.js";
 import { UpdateType, UserAction } from "../const.js";
-import {filter} from '../utils/filter.js';
+import { filter } from "../utils/filter.js";
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -74,7 +74,10 @@ export default class ListOfFilmsPresenter {
 
     this.#currentSortType = sortType;
 
-    const films = this.films.slice(0, Math.min(this.films.length, FILM_COUNT_PER_STEP));
+    const films = this.films.slice(
+      0,
+      Math.min(this.films.length, FILM_COUNT_PER_STEP)
+    );
     this.#clearFilmList();
     this.#renderSortFilms();
     this.#renderFilms(films);
@@ -117,22 +120,14 @@ export default class ListOfFilmsPresenter {
     render(this.#noFilmComponent, this.#filmsListContainer.element);
   };
 
-  #renderFilms = (films) => {
-    if (films.length === 0) {
-      this.#renderNoFilms();
-    } else {
-      for (
-        let i = 0;
-        i < Math.min(films.length, FILM_COUNT_PER_STEP);
-        i++
-      ) {
-        const film = films[i];
-        this.#renderFilm(film);
-      }
+  #renderFilms = films => {
+    for (let i = 0; i < Math.min(films.length, FILM_COUNT_PER_STEP); i++) {
+      const film = films[i];
+      this.#renderFilm(film);
+    }
 
-      if (this.films.length > FILM_COUNT_PER_STEP) {
-        this.#renderFilmButtonMore();
-      }
+    if (this.films.length > FILM_COUNT_PER_STEP) {
+      this.#renderFilmButtonMore();
     }
   };
 
@@ -171,6 +166,13 @@ export default class ListOfFilmsPresenter {
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
+      case UpdateType.INIT:
+        this.#renderFilmBoard();
+        console.log()
+        if (this.#filmsModel.films.length === 0) {
+          this.#renderNoFilms();
+        }
+        break;
       case UpdateType.PATCH:
         if (this.#filmPresenter.get(data.id)) {
           this.#filmPresenter.get(data.id).init(data);
@@ -181,7 +183,10 @@ export default class ListOfFilmsPresenter {
         }
         break;
       case UpdateType.MINOR:
-        const films = this.films.slice(0, Math.min(this.films.length, FILM_COUNT_PER_STEP));
+        const films = this.films.slice(
+          0,
+          Math.min(this.films.length, FILM_COUNT_PER_STEP)
+        );
         this.#clearFilmList();
         this.#renderFilms(films);
         break;
@@ -218,7 +223,7 @@ export default class ListOfFilmsPresenter {
       );
     }
 
-    document.addEventListener('keydown', this.#onCtrlEnterDown);
+    document.addEventListener("keydown", this.#onCtrlEnterDown);
 
     this.#filmDetailsPresenter.init(this.#selectedFilm, comments);
   };
@@ -243,11 +248,6 @@ export default class ListOfFilmsPresenter {
       0,
       Math.min(this.films.length, FILM_COUNT_PER_STEP)
     );
-
-    if (films.length === 0) {
-      render(this.#noFilmComponent, this.#container);
-      return;
-    }
 
     this.#renderSortFilms();
     this.#renderFilmsSection();
@@ -291,8 +291,8 @@ export default class ListOfFilmsPresenter {
     }
   };
 
-  #onCtrlEnterDown = (evt) => {
-    if (evt.key === 'Enter' && (evt.metaKey || evt.ctrlKey)) {
+  #onCtrlEnterDown = evt => {
+    if (evt.key === "Enter" && (evt.metaKey || evt.ctrlKey)) {
       evt.preventDefault();
       this.#filmDetailsPresenter.createComment();
     }

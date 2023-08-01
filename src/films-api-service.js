@@ -26,7 +26,23 @@ export default class FilmsApiService extends ApiService {
   #adaptToServer = film => {
     const adaptedFilm = {
       ...film,
-      "film_info": film.filmInfo,
+      "film_info": {
+        "title": film.filmInfo.title,
+        "alternative_title": film.filmInfo.alternativeTitle,
+        "total_rating": film.filmInfo.totalRating,
+        "poster": film.filmInfo.poster,
+        "age_rating": film.filmInfo.ageRating,
+        "director": film.filmInfo.director,
+        "writers": film.filmInfo.writers,
+        "actors": film.filmInfo.actors,
+        "release": {
+          "date": film.filmInfo.date,
+          "release_country": film.filmInfo.releaseCountry,
+        },
+        "runtime": film.filmInfo.runtime,
+        "genre": film.filmInfo.genre,
+        "description": film.filmInfo.description,
+      },
       "user_details": {
         "watchlist": film.userDetails.watchlist,
         "already_watched": film.userDetails.alreadyWatched,
