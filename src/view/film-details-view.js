@@ -9,7 +9,7 @@ const createFilmDetailsTemplate = ({
   userDetails,
   comments,
   checkedEmotion,
-  text,
+  comment,
 }) =>
   `<section class="film-details">
   <div class="film-details__inner">
@@ -32,7 +32,7 @@ const createFilmDetailsTemplate = ({
 
         ${createFilmDetailsCommentsList(comments)}
 
-        ${createFilmDetailsNewComment(checkedEmotion, text)}
+        ${createFilmDetailsNewComment(checkedEmotion, comment)}
 
       </section>
     </div>
@@ -46,7 +46,7 @@ export default class FilmDetailsView extends AbstractStatefulView {
       film,
       comments,
       viewData.emotion,
-      viewData.text,
+      viewData.comment,
       viewData.scrollPosition
     );
 
@@ -63,14 +63,14 @@ export default class FilmDetailsView extends AbstractStatefulView {
     film,
     comments,
     checkedEmotion = null,
-    text = null,
+    comment = null,
     scrollPosition = 0
   ) => {
     return {
       ...film,
       comments,
       checkedEmotion,
-      text,
+      comment,
       scrollPosition,
     };
   };
@@ -177,13 +177,13 @@ export default class FilmDetailsView extends AbstractStatefulView {
 
   #commentInputChangeHandler = evt => {
     evt.preventDefault();
-    this._setState({ text: evt.target.value });
+    this._setState({ comment: evt.target.value });
   };
 
   #updateViewData = () => {
     this.updateViewData({
       emotion: this._state.checkedEmotion,
-      text: this._state.text,
+      comment: this._state.comment,
       scrollPosition: this.element.scrollTop,
     });
   };

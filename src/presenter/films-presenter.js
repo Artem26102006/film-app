@@ -160,12 +160,12 @@ export default class ListOfFilmsPresenter {
         this.#filmsModel.update(updateType, updateFilm);
         break;
       case UserAction.ADD_COMMENT:
-        this.#commentsModel.addComment(updateType, updateComment);
+        this.#commentsModel.addComment(updateComment, updateFilm);
         this.#filmDetailsPresenter.clearViewData();
         this.#filmsModel.update(updateType, updateFilm);
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, updateComment);
+        this.#commentsModel.deleteComment(updateComment);
         this.#filmsModel.update(updateType, updateFilm);
         break;
     }

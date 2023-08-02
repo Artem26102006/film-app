@@ -25,20 +25,27 @@ export default class FilmsModel extends Observable {
     this._notify(UpdateType.INIT);
   };
 
-  update = (updateType, update) => {
+  update = async (updateType, update) => {
     const index = this.#films.findIndex(item => item.id === update.id);
 
     if (index === -1) {
       return items;
     }
 
-    this.#films = [
-      ...this.#films.slice(0, index),
-      update,
-      ...this.#films.slice(index + 1),
-    ];
+    try {
+      const response = await this.#filmsApiService.updateFilm(update);
+      const updatedFilm = this.#adaptToClient(response);
 
-    this._notify(updateType, update);
+      this.#films = [
+        ...this.#films.slice(0, index),
+        updatedFilm,
+        ...this.#films.slice(index + 1),
+      ];
+
+      this._notify(updateType, updatedFilm);
+    } catch (err) {
+      throw new Error("Can't update task");
+    }
   };
 
   #adaptToClient = film => {
@@ -55,7 +62,7 @@ export default class FilmsModel extends Observable {
         actors: film["film_info"]["actors"],
         release: {
           date: film["film_info"]["release"]["date"],
-          releaseСountry: film["film_info"]["release"]["release_country"],
+          releaseCountry: film["film_info"]["release"]["release_country"],
         },
         runtime: film["film_info"]["runtime"],
         genre: film["film_info"]["genre"],

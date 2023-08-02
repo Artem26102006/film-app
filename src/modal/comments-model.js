@@ -1,5 +1,4 @@
 import Observable from "../framework/observable.js";
-import { UpdateType } from "../const.js";
 export default class CommentsModel extends Observable {
   #commentsApiService = null;
   #comments = [];
@@ -13,30 +12,31 @@ export default class CommentsModel extends Observable {
     this.#comments = await this.#commentsApiService.get(id);
     return this.#comments;
   }
-  // get = film => {
-  //   this.#comments = film.comments.map(commentId =>
-  //     this.#allComments.find(comment => comment.id === commentId)
-  //   );
 
-  //   return this.#comments;
-  // };
+  addComment = async (comment, film) => {
+    try {
+      const response = await this.#commentsApiService.addNewComment(comment, film);
+      console.log(response)
+      this.#comments = response.comments;
 
-  // addComment = (updateType, update) => {
-  //   this.#allComments.push(update);
-  //   console.log(this.#allComments);
-  //   this._notify(updateType, update);
-  // };
+    } catch {
+      throw new Error('Can\'t add comment');
+    }
+  };
 
-  // deleteComment = (updateType, update) => {
-  //   const index = this.#allComments.findIndex(comment => {
-  //     comment.id === update.id;
-  //   });
+  deleteComment = async (update) => {
+    const index = this.#comments.indexOf(update);
 
-  //   this.#allComments = [
-  //     ...this.#allComments.slice(0, index),
-  //     ...this.#allComments.slice(index + 1),
-  //   ];
+    try {
+      await this.#commentsApiService.deleteComment(update);
 
-  //   this._notify(updateType);
-  // };
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
+
+    } catch(err) {
+      throw new Error("Error");
+    }
+  };
 }

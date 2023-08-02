@@ -1,4 +1,3 @@
-import {nanoid} from 'nanoid';
 import FilmDetailsView from "../view/film-details-view.js";
 import { remove, render, replace } from "../framework/render.js";
 import { UserAction, UpdateType } from "../const.js";
@@ -13,7 +12,7 @@ export default class FilmDetailsPresenter {
 
   #viewData = {
     emotion: null,
-    text: null,
+    comment: null,
     scrollPosition: 0,
   };
 
@@ -73,7 +72,7 @@ export default class FilmDetailsPresenter {
 
   clearViewData = () => {
     this.#updateViewData({
-      text: null,
+      comment: null,
       emotion: null,
       scrollPosition: this.#viewData.scrollPosition,
     });
@@ -112,30 +111,14 @@ export default class FilmDetailsPresenter {
   createComment = () => {
     this.#filmDetailsComponent.setCommentData();
 
-    const {emotion, text} = this.#viewData;
+    const {emotion, comment} = this.#viewData;
 
-    if (emotion && text) {
-      const newCommentId = nanoid();
-
-      const createdComment = {
-        id: newCommentId,
-        author: 'Artem',
-        date: new Date(),
-        emotion,
-        text
-      };
-
+    if (emotion && comment) {
       this.#changeData(
         UserAction.ADD_COMMENT,
         UpdateType.PATCH,
-        {
-          ...this.#film,
-          comments: [
-            ...this.#film.comments,
-            newCommentId
-          ]
-        },
-        createdComment
+        this.#film,
+        {emotion, comment}
       );
     }
   };
