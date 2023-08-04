@@ -10,14 +10,17 @@ export default class CommentsModel extends Observable {
     this.#filmsModel = filmsModel;
   }
 
-  comment = async (id) => {
+  comment = async id => {
     this.#comments = await this.#commentsApiService.get(id);
     return this.#comments;
-  }
+  };
 
   addComment = async (updateType, comment, film) => {
     try {
-      const response = await this.#commentsApiService.addNewComment(comment, film);
+      const response = await this.#commentsApiService.addNewComment(
+        comment,
+        film
+      );
 
       this.#comments = response.comments;
 
@@ -25,17 +28,13 @@ export default class CommentsModel extends Observable {
         updateType,
         update: this.#adaptToClient(response.movie),
       });
-
     } catch {
-      throw new Error('Can\'t add comment');
+      throw new Error("Can't add comment");
     }
   };
 
   deleteComment = async (updateType, film, update) => {
-    console.log(update)
-    const index = this.#comments.findIndex(
-      (comment) => comment.id === update.id
-    );
+    const index = this.#comments.findIndex(comment => comment.id === update.id);
 
     try {
       await this.#commentsApiService.deleteComment(update);
@@ -44,16 +43,15 @@ export default class CommentsModel extends Observable {
         ...film,
         comments: [
           ...film.comments.slice(0, index),
-          ...film.comments.slice(index + 1)
-        ]
+          ...film.comments.slice(index + 1),
+        ],
       };
 
       this.#filmsModel.updateOnClient({
         updateType,
         update: updateFilm,
       });
-
-    } catch(err) {
+    } catch (err) {
       throw new Error("Error");
     }
   };

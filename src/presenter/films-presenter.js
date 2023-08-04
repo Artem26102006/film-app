@@ -164,7 +164,11 @@ export default class ListOfFilmsPresenter {
         this.#filmDetailsPresenter.clearViewData();
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, updateFilm, updateComment);
+        this.#commentsModel.deleteComment(
+          updateType,
+          updateFilm,
+          updateComment
+        );
         break;
     }
   };
