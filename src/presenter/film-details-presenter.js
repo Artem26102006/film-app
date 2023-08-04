@@ -124,20 +124,13 @@ export default class FilmDetailsPresenter {
   };
 
   #deleteCommentUser = commentId => {
-    const filmCommentIdIndex = this.#film.comments.findIndex(id => id === commentId);
-
-    const deletedComment = this.#comments.find(comment => comment.id === commentId);
+    const deletedComment = this.#comments
+      .find((comment) => comment.id === commentId);
 
     this.#changeData(
       UserAction.DELETE_COMMENT,
       UpdateType.PATCH,
-      {
-        ...this.#film,
-        comments: [
-          ...this.#film.comments.slice(0, filmCommentIdIndex),
-          ...this.#film.comments.slice(filmCommentIdIndex + 1)
-        ],
-      },
+      this.#film,
       deletedComment
     );
   };

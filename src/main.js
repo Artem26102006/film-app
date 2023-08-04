@@ -20,7 +20,8 @@ const filmsModel = new FilmsModel(
   new FilmsApiService(END_POINT, AUTHORIZATION)
 );
 const commentsModel = new CommentsModel(
-  new CommentsApiService(END_POINT, AUTHORIZATION)
+  new CommentsApiService(END_POINT, AUTHORIZATION),
+  filmsModel
 );
 const filterModel = new FilterModel();
 
