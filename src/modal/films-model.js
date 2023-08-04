@@ -31,16 +31,15 @@ export default class FilmsModel extends Observable {
     if (index === -1) {
       return items;
     }
+    this.#films = [
+      ...this.#films.slice(0, index),
+      update,
+      ...this.#films.slice(index + 1),
+    ];
 
     try {
       const response = await this.#filmsApiService.updateFilm(update);
       const updatedFilm = this.#adaptToClient(response);
-
-      this.#films = [
-        ...this.#films.slice(0, index),
-        updatedFilm,
-        ...this.#films.slice(index + 1),
-      ];
 
       this._notify(updateType, updatedFilm);
     } catch (err) {

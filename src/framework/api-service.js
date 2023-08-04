@@ -32,7 +32,7 @@ export default class ApiService {
       `${this._endPoint}/${url}`,
       {method, body, headers},
     );
-
+    
     try {
       ApiService.checkStatus(response);
       return response;
