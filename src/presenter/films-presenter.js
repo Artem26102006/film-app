@@ -176,9 +176,6 @@ export default class ListOfFilmsPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.INIT:
-        if (this.#filmsModel.films.length === 0) {
-          this.#renderNoFilms();
-        }
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.#renderFilmBoard();
@@ -254,7 +251,11 @@ export default class ListOfFilmsPresenter {
   };
 
   #renderFilmBoard() {
-    this.#renderSortFilms();
+    const films = this.films.slice(
+      0,
+      Math.min(this.films.length, FILM_COUNT_PER_STEP)
+    );
+
     this.#renderFilmsSection();
     this.#renderFilmsList();
     this.#renderFilmsContainer();
@@ -264,11 +265,12 @@ export default class ListOfFilmsPresenter {
       return;
     }
 
-    const films = this.films.slice(
-      0,
-      Math.min(this.films.length, FILM_COUNT_PER_STEP)
-    );
+    if (!this.#isLoading && films.length === 0) {
+      this.#renderNoFilms();
+      return;
+    }
 
+    this.#renderSortFilms();
     this.#renderFilms(films);
   }
 

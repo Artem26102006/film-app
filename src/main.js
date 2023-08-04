@@ -23,6 +23,7 @@ const commentsModel = new CommentsModel(
   new CommentsApiService(END_POINT, AUTHORIZATION),
   filmsModel
 );
+
 const filterModel = new FilterModel();
 
 const listOfFilms = new ListOfFilmsPresenter(
